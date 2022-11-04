@@ -1,0 +1,508 @@
+DERS 9: Polimorfizm(Çok Biçimlilik) Nedir?
+
+- İki ya da daha fazla nesnenin aynı tür sınıf tarafından karşılanabilmesi/referans edilmesidir.
+Bir başka deyişle bir nesnenin birden fazla türdeki referans tarafından işaretlenebilmesi polimorfizm'dir.
+
+- Polimorfizm, bir nesnenin kalıtımsal olarak ilişkisi olan diğer nesnelerin referanslarıyla işaretlenebilmesini sağlar.
+
+- Polimorfizm, OOP tasarımlarında geliştirilen koda daha manevrasal bir şekilde nitelik kazandıran ve yaklaşım sergilememizi sağlayan bir özelliktir.
+
+- Programlamadaki temel prensip olan sol/sağ prensibi (lafın gelişi) aşıp, eldeki nesnenin birden fazla referansla işaretlenebilmesini sağlar.
+
+A a 				= 				new A();
+ancak			işaretlenbilir		'A' türünden bir nesne
+'A' türünden
+bir referansla
+
+aşıp, eldeki nesnenin birden fazla referansla işaretlenebilmesini sağlar.
+
+- Bir nesnenin, birden fazla referansla işaretlenmesi, o nesnenin, birden fazla türün davranışlarını gösterebilmesini sağlar.
+
+Not: Yani bir olguyu çoklu(poli) form (morfizmos) olarak tarif edebilmektir.
+
+Örnek:
+
+'Kuş' cinsinden olan tüm hayvanların kendi türlerinin dışında bir yandan 'Kuş' olarak tarif edilmeleri çok biçimliliktir.
+Peki kuş olmayan bir hayvana 'Kuş' diyemiyoruz! Misal 'Maymun' bir 'Kuş' değildir! Buradan şöyle bir sonuca varabilir miyiz?
+
+Ortak atadan gelen, kalıtımsal olarak 'Kuş'tan türeyen tüm hayvanlar kendi türleri yahut 'Kuş' türü ile referans edilebilirler.
+
+Buradan anlıyoruz ki, yazılımsal açıdan çok biçimliliğin söz konusu olabilmesi için teknik olarak 'Kalıtım' olması gerekmektedir.
+
+Örnek:
+
+Elimizdeki herhangi bir byte türünde veriyi ister byte ister byte'dan büyük olan herhangi bir türde tutmak çok biçimliliktir.
+
+byte 100
+byte value = 100
+int value = 100
+
+ya da 
+
+string "hilmi"
+
+object value = "hilmi"
+string value = "hilmi"
+
+Yukarıda görüldüğü üzere "hilmi" değerini ister 'object' türüyle referans edebilir istersekte 'string' türüyle işaretleyebiliriz.
+İşte burada 'object' ve 'string'in aynı veriyi işaretleyebilmesi bir çok biçimlilik-polimorfizm durumudur.
+
+- Nesne Tabanlı Programlama'da bir nesneyi kendi türünün referansıyla birlikte farklı türdeki referanslarla işaretleyerek Polimorfizm'i uygulayabilmekteyiz.
+
+Peki bunu nasıl yapıyoruz? Normal şartlarda bir nesne kendi sınıfının referansı dışında başka bir sınıfın referansıyla işaretlenemez!
+
+- Bir nesnenin bir başka nesne ile işaretlenebilmesi/referans edilmesi için kesinlikle arada kalıtımsal bir ilişki olması gerekmektedir.
+
+Yani bir başka deyişla Nesne Tabanlı Programlama'da Polimorfizm aralarında kalıtımsal ilişki olan sınıflarda uygulanabilir. Aksi mümkün değildir!
+
+Örnek:
+
+namespace deneme
+{
+   
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            MyClass m = new MyClass();
+
+            MyClass2 m = new MyClass(); //arada kalıtımsal ilişki yoksa hata verir.
+			//böyle bir durumda MyClass2, MyClass'ı referans edebilecekse Ata olan MyClass2 olmalı.
+        }
+    }
+
+    class MyClass : MyClass2
+    {
+
+    }
+
+    class MyClass2
+    {
+
+    }
+}
+
+Polimorfizm Kalıtım İlişkisi
+
+- Bir nesneyi, kendi türünün dışındaki bir tür ile/referansla işaretleyebilmek için kesinlikle ilgili nesne, o türden türemiş olması gerekmektedir.
+
+class A 
+{    }
+
+class B
+{	 }
+
+B b = new B(); //bugüne kadar bu prensibi izledik.
+
+STACK			HEAP
+
+(B) b			B object
+
+(A) a 			B object //şimdilik mümkün değil
+
+A a = new B(); //şu anki durumda hata verir.
+
+class A 
+{    }
+
+class B : A // bu şekilde B sınıfı A sınıfından türediği takdirde artık B sınıfı bir yandan da A sınıfı olacağı için B nesnesi A türde a referansı tarafından işaretlenebilecektir.
+{	 }
+
+STACK			HEAP
+
+(B) b			B object
+
+(A) a 			B object //sorun yok.
+
+Örnek:
+
+namespace deneme
+{
+   
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            A a = new B();
+            B b = new B();
+            C c = new B();  //...buradaki polimorfizm geçerli olacaktır.
+        }
+    }
+
+    class A : C //C'den B nesnesi oluşturmak istiyorsak,bir sınıf sadece tek bir sınıftan türeyebilir ilkesi ile,
+				//class B : A, C yazamayacağımızdan dolayı, B'yi C'den türetebilmek istiyorsak B'nin atalarından birini C'den türetmemiz gerek.
+    {
+	//Yani A'yı C'den türetirsek A, C olacak gibi düşünelim B'de A olduğu için dolaylı yoldan B'de C niteliğini kanacak ve ...
+    }
+
+    class B : A //A'dan B nesnesi oluşturmak istiyorsak B, A'dan kalıtım almalı.
+    {
+
+    }
+
+    class C 
+    {
+
+    }
+}
+
+Örnek:
+
+	class Insan
+    {
+
+    }
+
+    class Erkek : Insan
+    {
+
+    }
+
+    class Kadın : Insan 
+    {
+
+    }
+	
+Erkek e = new Erkek();
+
+//işte Kadın ve Erkek nesnelerinin Insan referansıyla işaretlenebilmesi polimorfizm'dir.
+Insan i = new Erkek();
+Insan i = new Kadin();
+
+Peki Polimorfizm Bir Nesne Yöneliminde Neye Yarar?
+
+	class A 
+    {
+		public void X() {}
+    }
+
+    class B : A
+    {
+		public void Y() {}
+    }
+
+    class C : B
+    {
+		public void Z() {}
+    }
+	
+new C(); //HEAP -> C Object [ X function  Y function  Z function ] 
+
+C c = new C(); //C nesnesini c referansı ile işaretlersem C'deki bütün elemanlara erişebilirim. 
+
+--------------------
+
+Polimorfizm Türleri (Genel Kültür)
+
+1)Statik Polimorfizm
+2)Dinamik Polimorfizm
+
+Statik Polimorfizm
+
+- Static, ileride göreceğimiz bir kavramdır. Şimdilik sadece Polimorfizm çevresinde Static Polimorfizm'i değerlendireceğiz.
+
+- Static polimorfizm; derleme zamanında sergilenen polimorfizm'dir. Hangi fonksiyonun çağrılacağına derlem zamanında karar verilir.
+- C#'da static polimorfizm denilince akla Metot Overloading terimi akla gelmelidir.
+
+Not: Metot Overloading; aynı isimde birbirinden farklı imzalara sahip olan metotların tanımlanmasıdır. Ya da başka deyişle bir isme birden fazla farklı
+türde metot yüklemektir. Haliyle burada bir metodun birden fazla formunun olması polimorfizm'ken bunlardan kullanılacak olanın derleme zamanında bilinmesi
+statik polimorfizm olarak nitelendirilmektedir.
+
+	class Program
+    {
+        static void Main(string[] args)
+        {
+
+            Matematik m = new Matematik();
+            m.Topla(4, 6); //hangi metodun kullanılacağı, şu anda yazdığım anda derleme zamanında karar verildi.
+        }
+    }
+
+	class Matematik
+	{
+
+	public long Topla(int s1, int s2) => s1 + s2;
+	public long Topla(int s1, int s2, int s3) => s1 + s2 + s3;
+	public long Topla(int s1, int s2, int s3 , int s4) => s1 + s2 + s3 + s4;
+	
+	}
+
+---------------------
+	
+Dinamik Polimorfizm
+
+- Çalışma zamanında sergilenen polimorfizm'dir. Yani hangi fonksiyonun çalışacağına runtime'da karar verilir.
+
+- C#'da dinamik polimorfizm deyince akla Metot Override gelmektedir.
+
+namespace deneme
+{  
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Arac a = new Arac(); 
+            a.Calistir(); //derleme süreci
+
+            Taksi t = new Taksi();
+            t.Calistir(); //derleme süreci
+
+            Arac arac = new Taksi();
+            arac.Calistir(); //Araç sınıfdaki Calistir()'mi Taksi sınıfındaki Calistir()'mi
+            //tetiklenecek buna runtime'da karar verilir.
+
+        }
+    }
+
+    class Arac
+    {
+        public virtual void Calistir() => Console.WriteLine("Araç çalıştı.");
+    }
+
+    class Taksi : Arac
+    {
+        public override void Calistir() => Console.WriteLine("Taksi çalıştı.");
+    }
+}
+
+--------------------------
+
+Polimorfizm Durumlarında Tür Dönüşümleri
+
+- Polimorfizm, OOP'de bir nesnenin kalıtımsal açıdan ataları olan referanslar tarafından işaretlenebilmesidir. Haliyle ilgili nesne, bu ataları olan referans türlerine
+göre dönüştürülebilmektedir.
+
+namespace deneme
+{  
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            A a = new C(); //bu nesne A referansında tutulan/işaret edilen/referans edilen bir C türünden nesnedir.
+            //Haliyle ihtiyaç doğrultusunda a referansı üzerinden diğer kalıtımsal ilişkide olduğu referanslara yahut 
+            //kendi referansına dönüştürülebilmektedir.
+
+            C c = (C)a; //misal olarakiburada görüldüğü üzere A türünden olan a referansındaki, özünde C türünden
+                        //nesne kendi türünden bir referansla işaretlenmiştir. (cast operatörü ile) (bilinçli dönüşüm)
+            
+            C c2 = new C();
+            A a2 = c2; //bilinçsiz dönüşüm yapılıyor. A a2 = (A) c2; bilinçli dönüşüm yazmamıza gerek yok.
+            //Bu durumun tersi de geçerlidir. Yani ilgili nesne kendi türünden kalıtımsal olarak ataları olan diğer
+            //türlere cast edilebilmektedir.
+        }
+    } 
+    class A
+    {
+        public string X { get; set; }
+    }
+    class B :A
+    {
+        public string Y { get; set; }
+    }
+    class C : B
+    {
+        public string Z { get; set; }
+    }
+}
+
+Not: Polimorfizm durumlarında kalıtımsal açıdan üst bir referans ile işaretlenebilmiş herhangi bir nesneyi kendi türünden işaretleyebilmek için
+Cast operatörünü kullanabilmekteyiz. Buradan anlıyoruz ki, object türünde gerçekleştirilen UnBoxing durumu esasında object türü ile gerçekleştirilebilen
+Polimorfizm'in bir sonucudur.
+
+Hatırlatma: Unboxing
+
+Unboxing object tipinin direk (explicit) olarak değer tipine (value type) dönüştürülme işlemi olarak tanımlanabilir.
+
+int i = 123;      // değer tipi (value type)
+object o = i;     // boxing
+int j = (int)o;   // unboxing
+
+ya da
+
+object a = new A();
+A _a = (A)a;
+
+----------
+
+Polimorfizm Durumlarında Tür Dönüşümleri
+
+- Polimorfizm durumlarında tür dönüşümünü gerçekleştirebilmek için Cast ya da as operatörleri kullanılır.
+
+Cast Kullanımı
+
+A-->B-->C-->D
+
+- Üst türden alt türe kalıtımsal ilişkide dönüşüm sağlar.
+
+A a = new C(); //A, C'nin atası olduğundan A referansı ile C nesnesini tutabiliriz.
+
+C c = (C)a; //A referansının içerisindeki C nesnesini, C referansı ile tekrardan elde edebilmek için cast operatörünü kullanırız.
+
+- Eğer kalıtımsal ilişki olmayan herhangi bir türe dönüştürülmeye çalışılırsa derleyici hatası verir.
+
+- Yok eğer kalıtımsal ilişkide olup fiziksel nesnenin hiyerarşik altında olan bir türe dönüştürülmeye çalışılırsa runtime hatası verilecektir.
+
+A a = new C(); //A referansının içinde C türünden bir nesne var.
+D d = (D) a; //C türünden olan bir nesneyi alt sınıf olan D türünden bir referansla almaya çalıştığımızda derleme sürecinde hata vermez.
+//derleyip çalıştırdığımızda A referansının içerisindeki nesne D değil ve işaretlenebilir bir referansta değil; System.InvalidCastException hatası verir.
+
+"Unable to cast object of type 'polimorfizm.C' to type 'polimorfizm.D'
+
+- Tersine olarak, kalıtımsal ilişkide alt türden üst türe cast operatörü ile de bir dönüşüm sağlamaktadır.
+
+C c = new C();
+A a = c;
+
+-----------------
+
+as Kullanımı:
+
+- Cast gibi kalıtımsal ilişki olan türler arasında referans dönüşümü yapabilmemizi sağlayan operatördür.
+
+A a = new C();
+
+C c = a as C; //a'nın içerisindeki nesneyi bana C türünde ver.
+
+- Dönüşüm esnasında hiyerarşik olarak tüm türlere dönüşüm sağlar. Lakin kalıtımsal ilişki yoksa derleyici hatası verir.
+
+- Ya da kalıtımsal ilişkide olup fiziksel nesnenin türünden daha alt hiyerarşide olan nesnelere dönüştürülmeye çalışıldığında
+Polimorfizm mantığı gereği ilgili referans o nesneyi karşılayamacağından runtime hatası vermeyecek! geriye null dönecektir.
+
+A a = new C() { X = "1", Y = "2", Z = "3" };
+D c = a as D;
+
+--------------
+
+is Operatörü
+
+- is operatörü kalıtımsal ilişkiye sahip nesnelerin Polimorfizm özelliğine nazaran fiziksel olarak hangi türde olduğunu veren bir operatördür.
+
+A a = new C() { X = "1", Y = "2", Z = "3" };
+
+CW(a is B); //True
+CW(a is C); //True
+CW(a is A); //True
+CW(a is D); //False, D kalıtımsal ilişkide olsa da olmasa da False döner. Olsa, C'nin altı olacağından False döner. Olmazsa zaten False.
+
+- Çok biçimlilik uygulanmış bir nesnenin ihtiyaç doğrultusunda(uygun olan) farklı bir türe dönüştürülebilmesi için işi garantiye almak adına
+önce is kontrolü ardından Cast ya da as operasyonu sağlanması uygundur.
+
+A a = new C();
+
+if (a is D) //a, D midir?
+{
+	D d = (D)a; //eğer D ise a'yı D'ye cast et. Runtime'da da hata vermez. Çünkü tetikleniyorsa zaten a bir D'dir. İçinde d referansı, D nesnesi barındırıyordur.
+}
+else if (a is C)
+{
+...
+}
+
+-------------------
+
+Örnek:
+
+using System;
+
+class Person //Person adlı base class tanımla ve içinde whoAmI() isim virtual metot oluştur.
+{
+    public virtual void whoAmI()
+    {
+        Console.WriteLine("I'm a person.");
+    }
+}
+
+class Man : Person //Man isimli bir derived class oluştur, Person'dan kalıtım al. 
+{
+    public override void whoAmI() //whoAmI() override metodu tanımla.
+    {
+        Console.WriteLine("I'm a man.");
+    }
+}
+
+class Woman : Person //Woman isimli bir derived class oluştur, Person'dan kalıtım al. 
+{
+    public override void whoAmI() //whoAmI() override metodu tanımla.
+    {
+        Console.WriteLine("I'm a woman.");
+    }
+}
+
+public class TestPerson
+{
+    static void Main()
+    {
+        Person a = new Man(); //Man türünde bir nesne oluştur ve Person türündeki a referansı ile işaretle.
+        a.whoAmI(); //Person sınıfındaki string yerine Man class'ındaki string'i output ver. Çünkü override ile ezdik.
+        Person b = new Woman(); //Aynı şekilde.
+        b.whoAmI();
+
+        Console.Read();
+    }
+}
+
+Çıktı:
+I'm a man.
+I'm a woman.
+
+Örnek:
+
+using System;
+
+namespace MyFirstProgram
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            //nesnelerimizi oluşturup referanslayalım.
+            Car car = new Car();
+            Bicycle bicycle = new Bicycle();
+            Boat boat = new Boat();
+
+            //Vehicle sınıfı türünde vehicles isimli bir array oluşturup, yukarıda oluşturduğumuz nesneleri elemanları olarak atayalım.
+            Vehicle[] vehicles = { car, bicycle, boat }; //bunu yazabilmek için Vehicle sınıfından kalıtım almaları şart!
+
+            //foreach ile array'i itere edelim. sırasıyla ilgili nesnenin sınıfına gidip ilgili metodu tetikleyecektir. 
+            foreach (Vehicle vehicle in vehicles)
+            {
+                vehicle.Go();
+            }
+
+            Console.ReadKey();
+        }
+    }
+    class Vehicle
+    {
+        public virtual void Go()
+        {
+            //nasılsa override edeceğimizden yazmaya gerek yok.
+        }
+    }
+    class Car : Vehicle
+    {
+        public override void Go() //[0] index olan Car sınıfının Go() metodu tetiklenip aşağıdaki CW'i çıktı verecek.
+        {
+            Console.WriteLine("The car is moving!");
+        }
+    }
+    class Bicycle : Vehicle
+    {
+        public override void Go() //[1] index olan Bicycle sınıfının Go() metodu tetiklenip aşağıdaki CW'i çıktı verecek.
+        {
+            Console.WriteLine("The bicycle is moving!");
+        }
+    }
+    class Boat : Vehicle //[2] index olan Boat sınıfının Go() metodu tetiklenip aşağıdaki CW'i çıktı verecek.
+    {
+        public override void Go()
+        {
+            Console.WriteLine("The boat is moving!");
+        }
+    }
+}
+
+Çıktı:
+The car is moving!
+The bicycle is moving!
+The boat is moving!

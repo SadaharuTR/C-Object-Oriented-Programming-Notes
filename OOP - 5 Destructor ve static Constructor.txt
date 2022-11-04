@@ -1,0 +1,215 @@
+DERS 5: Destructor/Finalizer Functions
+
+- Bir class'tan üretilmiş olan nesne imha edilirken otomatik çağrılan metottur.
+
+- C# programlama dilinde Destructor sadece class yapılanmasında kullanılabilir ve bir class sadece bir Destructor içerebilir.
+
+object
+constructor() //sembolik
+{
+	CW(".....");
+}
+
+Destructor ile imha edeceğiz.
+
+Bir Nesne Hangi Şartlarda - Kim Tarafından İmha Edilir?
+
+- İlgili nesne herhangi bir referans tarafından işaretlenmemelidir.
+- Nesnenin oluşturulduğu ve kullanıldığı scope sona ermiş olmalıdır.
+- Yani ilgili nesneye bir daha erişilemez hale gelinmelidir.
+
+- Uygulamada lüzumsuz olan nesneleri toplamakiçin Garbage Collector isimli bir mekanizma devreye girer.
+- GC, C#'da bellek optimizasyonunu üstlenen bir yapılanmadır.
+- Geliştiricilerin bu mekanizmaya müdahele etmesi pek önerilmez.
+
+Destructor Tanımlama Kuralları
+
+class MyClass
+{
+	~MyClass(){ //sadece 1 tane destructor tanımlanabilir. Her özel sınıf elemanlarında olduğu gibi destructor'da sınıf ismiyle aynı bir fonksiyondur.
+	//işlemler.. //tanımlayabilmek için ~ kullanılır.
+	}
+
+}
+
+- İşte bu fonksiyon, bu sınıftan üretilen nesne imha edilirken otomatik olarak son kez "selametle" demek için (yani son işlemleri yapabilmek için)
+tetiklenecek olan fonksiyondur.
+
+namespace OOPExamples
+{
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            X();
+            GC.Collect(); //garbage collector devreye sokulmuş oldu.
+            Console.ReadLine(); 
+        }
+        static void X()
+        {
+            MyClass m = new MyClass();
+        }
+    }
+
+    
+    class MyClass
+    {
+        public MyClass()
+        {
+            Console.WriteLine("Nesne üretilmiştir.");
+        }
+        ~MyClass()
+        {
+            Console.WriteLine("Nesne imha ediliyor.");
+        }
+    }
+}
+
+Çıktı: 
+Nesne üretilmistir.
+Nesne imha ediliyor.
+
+Örnek:
+
+int sayi = 100;
+
+while(sayi >= 1)
+{
+    new MyClass2(sayi--);
+}
+Console.WriteLine("***************");
+GC.Collect();
+Console.ReadLine();
+
+class MyClass2
+{
+    int no;
+
+    public MyClass2(int no)
+    {
+        this.no = no; //soldaki class içindeki sağdaki parametredeki no.
+        Console.WriteLine($"{no}. nesne oluşturulmuştur");
+    }
+    ~MyClass2()
+    {
+        Console.WriteLine($"{no}. nesne imha edilmiştir.");
+    }
+}
+
+Çıktı:
+100. nesne olusturulmustur
+99. nesne olusturulmustur
+98. nesne olusturulmustur
+...
+2. nesne olusturulmustur
+1. nesne olusturulmustur
+***************
+2. nesne imha edilmistir.
+3. nesne imha edilmistir.
+4. nesne imha edilmistir.
+...
+99. nesne imha edilmistir.
+100. nesne imha edilmistir.
+
+--------------------------------
+
+Deconstruct Metodu Nedir?
+
+- Bir sınıf içerisinde "Deconstruct" ismiyle tanınan metot compiler tarafından özel olarak algılanmakta ve sınıfın nesnesi üzerinden geriye hızlıca bir özet maiyetinde
+Tuple bir değer döndürmemizi sağlamaktadır.
+
+A  ------------> var(x,y) = A;
+object 
+X=3
+Y=5
+Z=6
+
+class MyClass
+{
+	public string Name { get; set; }
+	public string Name { get; set; }
+	//prototip
+	public void Deconstruct(out string a, out string b)
+	{
+	a=x;
+	b=y;
+	}
+}
+
+Örnek:
+
+Person person = new Person
+{
+    Name = "Mahmut",
+    Age = 15
+};
+
+var (x,y) = person; //person'u al x ve y değişkenlerine ayır.
+
+class Person
+{
+
+    public string Name { get; set; }
+    public int Age { get; set; }
+
+    public void Deconstruct(out string name, out int age) //public olması gerekli. geriye değer döndürmemekte. out olarak aldığı parametreleri Tuple olarak döndürecektir.
+                                                          //Compiler bu metodun bir yapılanma olduğunu isminden anlayacaktır.
+    {
+        name = Name;
+        age = Age ;
+    }
+}
+
+--------------------------
+
+Static Constructor
+
+Güncelleme: Bir sınıftan nesne üretilirken "constructor"a nazaran ilk tetiklenen metot "static constructor"'dır. 
+
+Fakat, belirli bir duruma istinaden.
+
+class A
+
+constructor()
+{
+//ilgili sınıftan her nesne üretildiğinde tetiklenir.
+}
+
+static constructor()
+{
+//ilgili sınıftan ilk nesne üretilirken tetiklenen fonksiyondur.
+}
+
+Örnek:
+
+new MyClass(); //ilk nesne üretiminde static constructor tetiklenir. Sonra MyClass constructor'u tetiklenir.
+new MyClass(); //ikinci nesne üretiminde ve sonrakilerde MyClass constructor'u tetiklenir
+
+class MyClass
+{
+
+    public MyClass()
+    {
+        Console.WriteLine("MyClass constructor'ı tetiklenmiştir.");
+    }
+    static MyClass() //static constructor'da geri dönüş değeri ve erişim belirleyicisi belirlenmez.
+    {
+        //overloading yapılmaz.
+        //Bir sınıfın içerisinde sadece bir tane tanımlanabilir.
+        //Parametre almaz.
+        //İsmi sınıf ismiyle aynı olmalı.
+        Console.WriteLine("MyClass static constructor'ı tetiklenmiştir.");
+    }
+}
+
+Çıktı:
+MyClass static constructor'i tetiklenmistir.
+MyClass constructor'i tetiklenmistir.
+MyClass constructor'i tetiklenmistir.
+
+- Static constructor'ın tetiklenebilmesi için illa ilk nesne üretimi yapılmasına gerek yoktur. İlgili sınıf içerisinde herhangi bir static yapılanmanında tetiklenmesi
+static constructor tetiklenmesini sağlayacaktır.
+
+----------------------------
+

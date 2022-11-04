@@ -1,0 +1,334 @@
+DERS 4: Özel Sınıf Elemanları - Constructor Metot Nedir?
+
+- Constructor bir nesne üretimi sürecinde ilk tetiklenen metottur.
+
+new MyClass (); -> parantez, Constructor metot demektir.
+
+- Constructor, nesne oluşturma sürecinde tetiklenmek zorundadır.
+
+Davranış Modeli
+
+new MyClass ();
+
+MyClass Object
+
+constructor() //sembolik
+{
+	int a = 5;
+	int b = 15;
+	int c = 25;
+
+}
+
+int a;
+int b;
+int c;
+
+- Bu nesne oluşturulurken constructor tetikleneceğinden dolayı ilgili nesne içerisindeki field'ların ilk değerleri verilmiş olacaktır.
+- Görüldüğü üzere, constructor işlevsel açıdan nesnelerin yaratılma aşamalarında içerisindeki field'lara ilk değerlerini atamakla yükümlü olabilmektedir.
+- Bu nesne oluşturulurken constructor tetikleneceğinden dolayı ilgili nesne içerisindeki field'ların ilk değerleri verilmiş olacaktır.
+Önce bu nesneye hafızada bir yer ayrılır bu ayrım yapıldıktan sonra constructor tetiklenir.
+
+Constructor Metot Oluşturma
+
+- Constructor, özel bir sınıf elemanıdır.
+
+- Özel olsa da fıtrat olarak bir metottur. Ufak farklılıklarla..
+
+Constructor'ların;
+
+- Metot adı sınıf adıyla aynı olmalıdır!(özel sınıf elemanlarının dışında hiçbir member sınıf adıyla aynı olamaz.)
+- Geri dönüş değeri olmaz/belirtilmez.
+- Erişim belirleyicisi public olmalıdır.(private olduğu durum ayrıca incelenecektir.)
+
+class MyClass
+{
+	public MyClass() //constructor metot.
+	{
+	
+	}
+
+	public void X()
+	{
+	
+	}
+}
+
+Örnek:
+
+new MyClass(); //ilk olarak constructor metot tetiklenecektir.
+new MyClass();
+new MyClass();
+new MyClass();
+new MyClass();
+
+
+class MyClass
+{
+    public MyClass() //constructor metot.
+    {
+        Console.WriteLine("Bir adet myclass nesnesi oluşturulmuştur.");
+    }
+    public void X()
+    {
+
+    }
+}
+
+Çıktı:
+Bir adet myclass nesnesi oluşturulmuştur.
+Bir adet myclass nesnesi oluşturulmuştur.
+Bir adet myclass nesnesi oluşturulmuştur.
+Bir adet myclass nesnesi oluşturulmuştur.
+Bir adet myclass nesnesi oluşturulmuştur.
+
+Not: C# 9.0 da gelen target type özelliğini hatırlarsak.
+MyClass m = new(); //ile nesneyi üretebiliyorduk. 
+
+----------------
+
+Default Constructor
+
+class MyClass //bu sınıf içerisinde herhangi bir constructor tanımlanmamış olabilir.
+{
+
+}
+
+new MyClass(); //lakin nesne üretirken de constructor tetiklenmektedir. Her sınıfın içerisinde tanımlamasak dahi default bir constructor mevcuttur.
+
+- Eğer ki bir class'a constructor erklersek default constructor'u ezmiş oluruz.
+
+---------------------
+
+Parametreli Constructor'lar
+
+new MyClass(5); //ona göre nesne oluşturmak lazım.
+
+MyClass m = new(15);
+
+class MyClass
+{
+    public MyClass(int a) //artık parametre alıyor.
+    {
+        Console.WriteLine("Bir adet myclass nesnesi oluşturulmuştur." + a);
+    }
+    public void X()
+    {
+
+    }
+}
+
+Çıktı:
+Bir adet myclass nesnesi olusturulmustur.5
+Bir adet myclass nesnesi olusturulmustur.15
+
+---------------------------
+
+- Bir sınıf tanımlamasında birden fazla constructor tanımlayabiliriz. Yani constructor'lar overload olabilen fonksiyonlardır.
+
+Overload: Bir sınıf içerisinde aynı isimde birden fazla member olamaz. Eğer ki aynı isimde birden fazla metot oluşturacaksak bu metotlar, overloading(çoklu yüklenme)
+yapılması lazım. İsimler aynı fakat parametrelerin sayıları yahut türleri veya yerleri değişmiş olmalıdır.
+
+new MyClass(); 
+new MyClass(5); 
+new MyClass("Ali");
+new MyClass("alican",25);
+
+MyClass m = new();
+MyClass m1 = new(15);
+MyClass m2 = new("cemal");
+MyClass m3 = new("comolok",15);
+
+
+class MyClass //alayı overload
+{
+    public MyClass()
+    {
+
+    }
+    public MyClass(int a) 
+    {
+        
+    }
+    public MyClass(string a)
+    {
+
+    }
+    public MyClass(string a, int b)
+    {
+
+    }
+}
+
+----------------------------------------
+
+Not: Default constructor public'tir.
+
+Private Constructor?
+
+new MyClass(); //nesne üretiminde hata alırız. Sınıfın dışında nesne üretilemez.
+
+class MyClass
+{
+    private MyClass() //ya da sadece MyClass() yazarsak zaten private olur. Erişimi bu sınıfla sınırladı.
+    {
+
+    }
+
+	void X()
+    {
+        new MyClass(); //class'ın içinde constructor'u çağırıp nesne üretebilirim.
+    }
+}
+
+- Bir sınıfın constructor metot'unu private yaparsak o sınıfın constructor metoduna erişilemeyeceği için nesne üretimini engellemiş oluruz.
+
+- Buna ihtiyacımız olduğu durumlar olacaktır. (İleride Singleton Design Pattern'larda) Nesne oluşumunu dışardan engelleyip içeriden nesne oluşum sürecini
+kontrol etmek istediğimiz durumlar örnek verilebilir.
+
+-------------------------
+
+This Keyword'ü ile Constructor'lar Arası Geçiş
+
+this keyword: O sınıfın o anki nesnesini temsil eder ve this. dediğimiz an o sınıfın tüm memberlarını getirir.
+
+Constructor'lar ile olan 2. Kullanımında ise;
+
+new MyClass(5);
+
+
+class MyClass
+{
+    public MyClass()
+    {
+        Console.WriteLine("1.Constructor.");
+    }
+    
+    public MyClass(int a) : this() //bunu tetikledik ama aynı anda bir üsttekine de ihtiyacımız var. : this() ile bu nesnenin diğer constructor'larını bana getir demiş olduk.
+    {
+        Console.WriteLine($"2.Constructor : a = {a}");
+    }
+    //Eğerki nesne üretiminde public MyClass(int a) contructor'u tetikleniyorsa bu contructor işlemini görmeden önce this()'deki "şu" contructor'u tetikle,
+    //onu tamamladıktan sonra ilkini işleme al demiş olduk.
+}
+
+Çıktı:
+1.Constructor.
+2.Constructor : a = 5
+
+Örnek: 
+
+new MyClass(5,10);
+
+
+class MyClass
+{
+    public MyClass()
+    {
+        Console.WriteLine("1. Constructor.");
+    }
+    
+    public MyClass(int a) : this() //bunu tetikledik ama aynı anda bir üsttekine de ihtiyacımız var. : this() ile bu nesnenin diğer constructor'larını bana getir demiş olduk.
+    {
+        Console.WriteLine($"2. Constructor : a = {a}");
+    }
+    //Eğerki nesne üretiminde public MyClass(int a) contructor'u tetikleniyorsa bu contructor işlemini görmeden önce this()'deki "şu" contructor'u tetikle,
+    //onu tamamladıktan sonra ilkini işleme al demiş olduk.
+    public MyClass(int a, int b) : this(a)
+    {
+        Console.WriteLine($"2. Constructor : a = {a} | b = {b}");
+        //Eğer ki bu constructor tetikleniyorsa, öncelikle tek parametreli olan constructor'a git a'yı tetikle. a'ya tetiklendiği parametredeki değeri ver.
+        //istersek manuel'de değer verebiliriz.Bu şekilde bir üstteki constructor'a git. onun içindeki işlemleri yap. oradan da en baştakine git.
+        //bu şekilde silsile halinde contructor'ları tetikleyebiliriz.
+    }
+}
+
+Çıktı:
+1. Constructor.
+2. Constructor : a = 5
+2. Constructor : a = 5 | b = 10
+
+Not: this keyword'ü ile atlamalar yaparken değer vermemiz gerektiğinde ait olduğu syntax'da constructor'dan gelen parametreyi kullanabiliriz.
+Ya da manueal değer verebiliriz.
+
+public MyClass(int a, int b) : this(a) ya da
+public MyClass(int a, int b) : this(10) gibi.
+
+Bunun dışında farklı bir field'ın ya da property'nin değerini burada çağıramayız. 
+
+int x; //ya da public int x; farketmez.
+.
+.
+public MyClass(int a, int b) : this(x) //hata verir. Buradan erişilmez.
+{
+...
+}
+
+Not: İleride Custom Exception sınıfları oluştururken bolca kullanılır.
+
+Örnek:
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Product product = new Product("Laptop");
+        Console.WriteLine(product.Name);
+
+        Product product2 = new Product("Laptop", 1500);
+        Console.WriteLine(product2.Name);
+        Console.WriteLine(product2.UnitPrice);
+
+        Product product3 = new Product("Laptop", 1500, "Asus Laptop 4GB RAM");
+        Console.WriteLine(product3.Name);
+        Console.WriteLine(product3.UnitPrice);
+        Console.WriteLine(product3.Description);
+    }
+}
+
+class Product
+{
+    public string Name { get; set; }
+    public decimal UnitPrice { get; set; }
+    public string Description { get; set; }
+
+    public Product(string name)
+    {
+        this.Name = name;
+    }
+
+    public Product(string name, decimal unitPrice) : this(name)
+    {
+        this.UnitPrice = unitPrice;
+    }
+
+    public Product(string name, decimal unitPrice, string description) : this(name, unitPrice)
+    {
+        this.Description = description;
+    }
+}
+
+----------------------
+
+Record'larda Constructor'lar
+
+- Aynı kurallar record için de geçerlidir.
+
+new MyRecord(10);
+
+record MyRecord
+{
+    public MyRecord()
+    {
+        Console.WriteLine("İlk record.");
+    }
+    public MyRecord(int a) : this()
+    {
+        Console.WriteLine($"İkinci record + a = {a}");
+    }
+}
+
+Çıktı:
+Ilk record.
+Ikinci record + a = 10
+

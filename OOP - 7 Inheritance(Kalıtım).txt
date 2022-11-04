@@ -1,0 +1,953 @@
+DERS 7: Inheritance(Kalıtım) Nedir?
+
+- OOP'nin en önemli özelliğidir.
+
+- Üretilenn nesneler farklı nesnelere özelliklerini aktarabilmekte ve böylece hiyerarşik bir düzenleme yapılabilmektedir.
+
+- Bir programcı açısından bu özellik; aynı aile grubundan gelen nesnelerin ya da yatayda eşit seviyede olan tüm olguların benzer özelliklerini tekrar tekrar
+her birinde tanımlamaktansa bir üst sınıfta tanımlanmasını ve her bir sınıfın bu özellikleri üst sınıftan kalıtımsal olarak almasını sağlamaktır.
+
+- Böylece hem kod maliyeti düşmekte, hem de mimarisal tasarım açısından avantaj sağlanmaktadır.
+
+					-Canlı-
+	-insan-								-hayvan-
+	
+erkek   kadın				-kedi	 	-inek 		 -tavuk
+									    -montofon
+									    -angus
+									    -sığır  
+										
+Örnek: Sexist bir örnek vermek gerekirse;
+
+Erkek 			Kadın
+
+Adı				Adı
+Soyadı			Soyadı
+Yaş				Yaş
+
+Sakal			Makyaj
+Bıyık			Ruj
+							
+ikisinin de ortak özellikleri var. Bunları tekrar tekrar yazmaktansa ortak bir çatı altında, bir üst sınıf altında tanımlamak daha iyi gibi sanki.	
+
+- Nesne tabanlı programlamada benzer/aynı olgudaki nesnelerin aynı olan memberları/özellikleri/içerikleri eğer ki bu şekilde her sınıf içinde tekrarlanmışsa
+bu aykırı bir durumdur. Aynı olguda olan sınıfların tekrar eden memberları bir başka sınıfta toplansın ve oradan ilgili sınıflara kalıtımsal olarak aktarılsın,
+diye düşünebiliriz.
+
+		İnsan //ortak özellikleri insan sınıfında tanımla.
+		Adı
+		Soyadı
+		Yaş
+		
+Erkek 			Kadın //kalıtım kullanarak bu özellikleri Erkek ve Kadın'a gönder.
+
+Sakal			Makyaj //genellenemeyen diğerlerin olmayan ve sadece o sınıfa ait olan özellikler direkt ilgili sınıfta tanımlanmalıdır.
+Bıyık			Ruj								
+
+- Erkek ve Kadın sınıfları İnsan sınıfından kalıtım alırsa/türetilirse/miras alırsa insan sınıfındaki tüm memberlar (erişimine izin verilen/miras olarak aktarılmasına izin
+verilen memberlar) miras olarak aktarılacaktır.
+
+Kalıtımın Kullanılmadığı Durumlarda Kodumuz;
+
+class Opel
+{
+	public string Marka {get; set;}
+	public string Model {get; set;}
+	public int KM {get; set;}
+}
+
+Opel
+Marka =
+Model =
+KM =
+
+class Mercedes
+{
+	public string Marka {get; set;}
+	public string Model {get; set;}
+	public int KM {get; set;}
+}
+
+Mercedes
+Marka =
+Model =
+KM =
+
+class Fiat
+{
+	public string Marka {get; set;}
+	public string Model {get; set;}
+	public int KM {get; set;}
+}
+
+Fiat
+Marka =
+Model =
+KM =
+
+- Çok lüzumsuz, fazlalık kod yazıldı. Tekrara düşüldü.
+
+Kalıtımın Kullanılmadığı Durumlarda Kodumuz;
+
+class Araba
+{
+	public string Marka {get; set;}
+	public string Model {get; set;}
+	public int KM {get; set;}
+}
+
+class Opel
+{
+
+}
+
+Opel
+Marka =
+Model =
+KM =
+
+class Mercedes
+{
+
+}
+
+Mercedes
+Marka =
+Model =
+KM =
+
+class Fiat
+{
+
+}
+
+Fiat
+Marka =
+Model =
+KM =
+
+- Araba sınıfından kalıtım aldığımız kod daha sade ve pratik oldu.
+
+- Kalıtım gelişigüzel tasarlanmamalıdır. Ortak olguda olan nesneleri temsil edecek olan bir üst ve daha evrensel nitelikte olgu olmalıdır.
+Opel, Mercedes, Fiat ortak olgudur. Yani üçüde bir arabadır. Haliyle bunların daha evrensel üst niteliği Araba olarak nitelendirilebilir.
+
+- Kalıtım operasyonunda, kalıtım veren sınıfın  erişilebilen tüm memberları kalıtım alan sınıfa kalıtsal olarak aktarılacaktır.
+
+- OOP'de kalıtım özünde nesnelerin birbirlerinden türemesini sağlayan bir özelliktir. Bu özellik yanında birçok özellik ve stratejik yapılanma getirmektedir.
+
+virtual, polimorfizm, abstraction, interface .......
+
+--------------------
+
+C# Programlama Dilinde Hangi Yapılar Kalıtım Alabilirler?
+
+- C# programlama dilinde kalıtım sınıflara özel bir niteliktir.
+- Yani bir sınıf sadece bir sınıftan kalıtım alabilir.
+
+- record'lar özünde sınıftır ve kalıtım alabilmektedir. Lakin sadece kendi aralarında. Kalıtım alabildikleri tek istisnai sınıf ise Object sınıfıdır.(ileride)
+Abstract class, interface ve struct gibi yapıların da kendilerine göre kalıtımsal operasyonları mevcuttur.
+
+---------------------
+
+C#'da kalıtım Nasıl Alınır?
+
+: Operatörü kullanılmaktadır.
+
+- Kalıtımsal tüm ilişkiler : operatörü tarafından yapılmaktadır.
+
+class Araba
+{
+	public string Marka {get; set;}
+	public string Model {get; set;}
+	public int KM {get; set;}
+}
+
+class Opel: Araba //soldaki sağdakinden kalıtım alsın yani Opel sınıfı, araba sınıfından kalıtım alsın demiş oluyoruz.
+{
+
+}
+
+_____1_____ : _____2______ -> : operatörü 2 sınıfındaki tüm erişilebilir memberları, 1. sınıfa kalıtımsal olarak aktarmaktadır.
+
+- Kalıtım, operasyonel olarak gerçekleştirildikten sonra compiler seviyesinde member aktarımı sağlanır.
+
+class Araba
+{
+	public string Marka {get; set;}
+	public string Model {get; set;}
+	private int KM {get; set;} //bu sadece class Araba içerisinde kullanılabilir. Opel'e aktarılmaz.
+}
+
+class Opel: Araba //soldaki sağdakinden kalıtım alsın yani Opel sınıfı, araba sınıfından kalıtım alsın demiş oluyoruz.
+{
+
+}
+
+- Yani artık Opel sınıfından bir nesne ürettiğimizde içerisinde Marka ve Model property'leri kalıtımsal olarak aktarıldığı için erişilebilir olacaktır.
+
+Örnek:
+
+namespace OOPExamples
+{
+    public class Program
+    {
+        static void Main(string[] args)
+        {
+            Muhasebeci muhasebeci = new Muhasebeci();
+            Mudur mudur = new Mudur();
+
+            //Personel'den erişilebilenler
+            muhasebeci.Adi
+            muhasebeci.Soyadi
+            muhasebeci.Medenihal
+
+            //Muhasebeci'den gelen
+            muhasebeci.Musavir
+            
+            mudur.Musavir //hata, ilişki yok.
+			
+			yazilimci.KullandigiDiller
+
+        }
+    }
+
+    class Personel
+    {
+        public string Adi { get; set; }
+        public string Soyadi { get; set; }
+        public string Medenihal { get; set; }
+    }
+
+    class Muhasebeci : Personel
+    {
+        public bool Musavir { get; set; }   
+
+    }
+    class Yazilimci : Personel
+    {
+		public string[] KullandigiDiller { get; set; }
+    }
+    class Mudur : Personel
+    {
+		
+    }
+}
+
+-------------------------
+
+Base Class ve Derived Class Nedir?
+
+- Kalıtım veren sınıfa Base/Paren Class denir. Kalıtım alan sınıfa Derived/Child Class denir.
+
+class A
+{
+
+}
+class B:A //Base Class:A, Derived Class: B
+{
+
+}
+class C:B //Base Class:B, Derived Class: C
+{
+
+}
+class D:C //Base Class:C, Derived Class: D
+{
+
+}
+
+- A, B2nin olduğu gibi bir yandan da C ve D'nin de Base Class'ı mıdır? Hayır. Bir sınıfın sadece tek bir Base Class'ı olabilir. Tüm atalar tüm torunların Base Class'ı
+değildir.
+
+- Bir sınıfın Base Class'ın  direkt türediği sınıftır.
+
+- Bir class'ın birden fazla Derived Class'ı olabilir.
+
+Örnek:
+
+class A
+{
+
+}
+class B:A //Base Class:A, Derived Class: B
+{
+
+}
+class C:A //Base Class:A, Derived Class: C
+{
+
+}
+class D:C //Base Class:C, Derived Class: D
+{
+
+}
+
+- C hem derived hem de base class.
+
+Kalıtımın Altın Kuralı:
+
+- C# programlama dilinde bir class'ın sadece tek bir class'tan türetilmesine izin verilmektedir. Aynı anda birden fazla class'tan türeme işlemi gerçekleştirilemez.
+
+	class BuyukBaba
+    {
+        
+    }
+    class Baba : BuyukBaba //Anne ile Baba, BuyukBaba'nın derived class'larıdır.
+    {
+
+    }
+    class Anne : BuyukBaba
+    {
+
+    }
+    class Ogul : Baba, Anne //hata verir.
+    {
+	
+    }
+
+Not:
+
+	class Y : X, Z,W //hata verir.
+    {
+	
+    }
+
+//İleride birden fazla kalıtım tanımlamasının yapılabildiğini göreceğiz. Lakin orada da göreceğiz ki Z ve W bir sınıf olmayacak.(interface konusu)
+
+------------
+
+Örnek:
+
+	class BuyukBaba
+    {
+        
+    }
+    class Baba : BuyukBaba //Anne ile Baba, BuyukBaba'nın derived class'larıdır.
+    {
+
+    }
+    class Anne : Baba 
+    {
+
+    }
+    class Ogul : Anne //tarzı bir çözümle Ogul hem Anne'den hem Baba'dan kalıtım alabilir.
+    {
+
+    }
+	
+---------------
+
+Kalıtımda Nesne Üretim Sırası
+
+- Bir sınıftan nesne üretimi yapılırken kalıtım aldığı üst sınıflar varsa eğer önce o sınıflardan sırayla nesne üretilir.
+
+A -> B -> C 
+
+new C(); //dediğimizde önce A'dan sonra B'den en son C'den nesne üretilir. HEAP'te A, B ve C için üretilen 3 tane nesne olacaktır.
+
+Örnek:
+
+new B(); //önce A'dan bir nesne oluşturulur. Sonra istenilen B nesnesi oluşturulur. HEAP -> A ve B
+
+class A 
+{
+
+}
+class B:A 
+{
+
+}
+
+Örnek:
+
+new D(); //Ne kadar Ata varsa herbirinden nesne oluşturulur.
+
+class A //önce A'dan
+{
+
+}
+class B:A //sonra B'den
+{
+
+}
+class C:B //sonra C'den
+{
+
+}
+class D:C //en son D'den nesne üretilir.
+{
+
+}
+
+Örnek:
+
+namespace OOPExamples
+{
+    public class Program
+    {
+        static void Main(string[] args)
+        {
+            new D();
+        }
+    }
+
+    class A //önce A'dan
+    {
+        public A()
+        { 
+        Console.WriteLine($"{nameof(A)} nesnesi oluşturulmuştur.");
+        }
+    }
+    class B : A //sonra B'den
+    {
+        public B()
+        {
+            Console.WriteLine($"{nameof(B)} nesnesi oluşturulmuştur.");
+        }
+    }
+    class C : B //sonra C'den
+    {
+        public C()
+        {
+            Console.WriteLine($"{nameof(C)} nesnesi oluşturulmuştur.");
+        }
+    }
+    class D : C //en son D'den nesne üretilir.
+    {
+        public D()
+        {
+            Console.WriteLine($"{nameof(D)} nesnesi oluşturulmuştur.");
+        }
+    }
+
+}
+
+Çıktı:
+A nesnesi olusturulmustur.
+B nesnesi olusturulmustur.
+C nesnesi olusturulmustur.
+D nesnesi olusturulmustur.
+
+---------------------------
+
+Bir Sınıftan Base Class Constructor'una Ulaşım
+
+- Madem ki, herhangi bir sınıftan nesne üretimi gerçekleştirildikten öncelikle base class'ından nesne üretiliyor, bu demektir ki önce base class'ın
+constructor'ı tetikleniyor.
+
+- Haliyle bizler nesne üretimi esnasında base class'ta üretilecek olan nesnenin istediğimiz constructor'larını tetikleyebilmeli yahut varsa parametre, bu değerleri
+verebilmeliyiz.
+
+- İşte bunun için base keyword'ünü kullanmaktayız.
+
+	class Program
+    {
+        static void Main(string[] args)
+        {
+            new MyClass2(); //buradaki operasyon, MyClass2'den nesne oluşturulurken,
+        }
+    }
+
+    class MyClass //ilk buradan bir nesne oluşturacak.
+    {
+        public MyClass(int a) //bu constructor'u tetiklemek lazım.
+        {
+		//fakat buradaki constructor parametreli, bu parametreye ne değer verileceğini compiler bilemez.
+        }
+    }
+    class MyClass2 : MyClass //o yüzden burada hata alırız.
+    { 
+    //o değeri buradan göndermek lazım. Bunu yapabilmek için de base keyword'ünü kullanırız ve base class'ın constructorlarına erişiriz.
+    }
+
+düzeltirsek;
+
+	class Program
+    {
+        static void Main(string[] args)
+        {
+            new MyClass2();
+        }
+    }
+
+    class MyClass
+    {
+        public MyClass(int a) 
+        {
+
+        }
+    }
+    class MyClass2 : MyClass 
+    { 
+        public MyClass2() : base (5) //hata ortadan kalktı.
+        {
+		//Myclass2'den bu constructor'u kullanarak bir nesne oluşturuyorsam öncelikle base class'ın nesnesini oluşturacağından haliyle bu işlemde (5) değerini
+		//MyClass constructor'undaki (int a) 'ya alacağından base constructor'u tetikleyerek o nesneyi oluşturup sonra MyClass2'nin nesnesini oluşturacak.
+        }
+		public MyClass2(int a) : base (a) //ya da base(5)
+        {
+		//burada da aynı hatayı almamak için base eklememiz gerekli. Bu constructor'u kullanarak nesne oluşturmaya kalkarsak, bu constructor ilgili base class
+		//ilgili base class'ın parametre alan constructor'una hangi değeri vereceğini bilemediğinden dolayı burada da o değeri bizim öndermemiz lazım.
+        }
+    }
+	
+- Eğer ki base class'ın constructor'u sadece parametre alan constructorise derived class'larda o constructor'a bir değer göndermek zorundayız. Bunu da 
+base keyword'ü ile sağlayabiliriz.
+
+Base Class'ta birden fazla constructor olması durumunda (overload);
+
+	class Program
+    {
+        static void Main(string[] args)
+        {
+            new MyClass2();
+        }
+    }
+
+    class MyClass
+    {
+        public MyClass(int a) 
+        {
+
+        }
+        public MyClass() //eğer ki base class'ta boş parametreli bir constructor overload'umuz olsaydı
+        {
+
+        }
+    }
+    class MyClass2 : MyClass 
+    { 
+        public MyClass2() //derived class'ta base ile bir bildirimde bulunmamıza gerek yoktu. Çünkü varsayılan olarak kalıtımsal durumda boş parametreli
+                          //constructor (base class'taki) tetiklenir.
+        {
+
+        }
+        public MyClass2(int a) : base (a)
+        {
+
+        }
+    }
+
+Örnek:
+
+- Bir class'ın constructor'ının yanında: base (...) keywordünü kullanırsak eğer o class'ın base class'ının tüm constructorlarını bize getirecektir. 
+Haliyle ilgili sınıftan bir nesne üretilirken base class'tan nesne üretimi esnasında hangi constructor'un tetikleneceğini bu şekilde belirleyebiliriz.
+
+	class Program
+    {
+        static void Main(string[] args)
+        {
+            new MyClass2();
+        }
+    }
+
+    class MyClass
+    {
+        //base class'ımızda birden fazla constructor var.
+        public MyClass(int a) 
+        {
+
+        }
+        public MyClass(string a)
+        {
+
+        }
+        public MyClass(int a, string b) //bu constructor tetiklenecektir.
+        {
+
+        }
+        public MyClass() 
+        {
+
+        }
+    }
+    class MyClass2 : MyClass 
+    { 
+        //biz de derived class'ta bu class'tan nesne oluşturulurken, base class'taki bu constructorlardan herhangi birinin tetiklenip ona göre nesnesini
+        //oluşturulmasını istiyorsam eğer.
+		
+        public MyClass2() : base(5,"Rammstein") //işte öyle bir durumda constructor'a göre base'deki istediğimiz bir consttuctor'u seçebiliriz.
+        {
+		//base(5,"Rammstein") böyle bir base belirlersek.
+        }
+        public MyClass2(int a) : base (a)
+        {
+
+        }
+    }
+	
+-----------------------------
+
+base Keyword ile this Keyword farkları;
+
+- this, bir sınıftaki constructor'lar arasında geçiş yapmamızı sağlar.
+
+- base, bir sınıfın base class'ının constructor'larından hangisinin tetikleneceğini belirlememizi ve varsa parametrelerinin değerlerinin dervied class'tan 
+verilmesini sağlar.
+
+Sembolik olarak this;
+
+constructor(): this(3) //buradaki this tek parametreli olan bir alttaki constructor'a yönlendirir.
+{ }
+constructor(int a): this(a,5) //bu this bir alttakine
+{ }
+constructor(int a, int b): this(a) //bu this ise bir yukarıdakine yönlendirmiş.
+{ }
+constructor(string c): this() //bu this ise en üsttekine yönlendirmiş.
+{ }
+
+Sembolik olarak base;
+
+Base Class
+constructor()
+{ }
+constructor(int a)
+{ }
+
+Derived Class
+constructor(): base() //base'deki boş parametreli constructor'a git.
+{ }
+constructor(int a) : base(a) //base'deki parametreli constructor'a git.
+{ }
+
+- This, ilgili sınıfta o anki nesnenin memberlarına erişebilmemizi sağlıyorsa, aynı şekilde base de base class'daki memberlara erişebilmemizi sağlar.
+
+Base Class
+
+int a;
+public int MyProperty{ get; set; }
+public void X()
+{ 
+
+}
+public void Y()
+{ 
+
+}
+
+Derived Class
+
+int b;
+public int MyProperty2{ get; set; }
+
+private void Z() 
+{
+
+//this bu sınıf içerisindeki member'lara erişmemizi sağlar.
+this.b = 5;
+this.MyProperty2 = 10;
+base.a = 15; //a erişilebilir değil. hata verir. default olarak private.
+this.MyProperty2 = 20;
+base.X(); //base ise base class'taki member'lara erişmemizi sağlar.
+base.Y(); //erişilebilir değil.
+
+}
+
+Not: Erişim belirleyicilere dikkat etmek şartıyla, C#'da memberların başına this veya base koymadan da işlemler yapabilmekteyiz. Fakat constructor'lar ile
+kullanımda şarttır.
+
+Örnek:
+
+	class A
+    {
+        int a;
+        public int b;
+        public int MyProperty { get; set; }
+    }
+    class B : A
+    {
+        int c;
+        public void X()
+        {
+            base.MyProperty = 1; 
+            MyProperty = 10; //base yazmadan da bu şekilde kullanabiliriz. Çünkü artık A'dan gelen bir member. Compiler otomatikman başına base koyacaktır.
+            b = 1; //aynı şekilde base koymaya gerek yok.
+            c = 2; //yine aynı şekilde compiler otomatik olarak this'leyecektir.
+        }
+    }
+
+---------------------
+
+Nesnelerdeki ToString, Equals, GetHashCode ve GetType Metotları nereden gelmektedir?
+
+Nesnelerin Atası/Adem'i Object Türü
+
+- C# programlama dilinde tüm sınıflar Object sınıfından türetilir. (ileride delegate konusunda bu cümle değişebilir.)
+
+Object yazıp sağ tıklayıp Go To Definition dersek;
+
+Object sınıfının Memberlarını görebiliriz. 
+
+namespace System
+{
+    //
+    // Summary:
+    //     Supports all classes in the .NET class hierarchy and provides low-level services
+    //     to derived classes. This is the ultimate base class of all .NET classes; it is
+    //     the root of the type hierarchy.
+    public class Object
+    {
+        
+        public Object(); //constructor
+
+        ~Object(); //destructor
+      
+		//members
+		//public olanlar tüm sınıf nesnelerinde otomatik olarak erişilebilir.
+        public static bool Equals(Object? objA, Object? objB);
+        
+        public static bool ReferenceEquals(Object? objA, Object? objB);
+        
+        public virtual bool Equals(Object? obj);
+        
+        public virtual int GetHashCode();
+        
+        public Type GetType();
+        
+        public virtual string? ToString();
+        
+        protected Object MemberwiseClone();
+    }
+}
+
+----------------------
+
+class Canli
+{
+	public int Yasi {get; set;}
+}
+class Insan: Canli
+{
+
+}
+
+
+- Bir sınıf kalıtım almazsa default olarak Object sınıfından türetilir.
+
+- Herhangi bir sınıfttan kalıtım alıyorsa, bir sınıfın aynı anda birden fazla sınıftan kalıtım almama presinsibinden yol çıkarak bir yandan da Object
+sınıfından türemeyecek sadece kalıtım aldığı sınıftan türeyecektir.
+
+- Tabi burada kalıtım veren sınıf herhangi bir sınıftan türemiyorsa eğer en nihayetinde Object'ten türeyeceği için dolaylı yoldan insan sınıfı da Object'ten
+kalıtım almış olacaktır.
+
+------------------
+
+İsim Saklama (Name Hiding)
+
+- Kalıtım durumlarında atalardaki herhangi bir member ile aynı isimder member'a sahip olan nesneler olabilmektedir.
+
+class A
+{
+	public int X {get; set;}
+}
+class B : A  
+{
+	public int X {get; set;}
+}
+
+B b = new B();
+
+b.X -> Nereden geldi bu member? A'mı B'mi İşte bunun adı Name Hiding'dir.
+
+- Bu tasarımda base class'tak/atalardaki X member'ına B üzerinden erişmek mümkün değildir! Yani base'deki üye gizlenmiştir.
+
+- Derleriyi hata vermez ama uyarı verir.
+Warning	CS0108	'B.X' hides inherited member 'A.X'. Use the new keyword if hiding was intended.
+
+- Görüldüğü üzere B sınıfının base class'taki X member'ını gizleyeceğini ifade etmekte ve gizlenmesi için ise new keyword'ünün kullanılması gerektiği söylenmektedir.
+Eskiden name hiding durumlarında alt sınıfın içerisindeki üyeyi new ile işaretliyorduk(bilinçli bir şekilde yapıyorum). Günümüzde buna ihtiyaç yoktur.
+
+Yine de Name Hiding durumlarında new operatörünün kullanımını incelersek:
+
+class A
+{
+	public int X {get; set;}
+}
+class B : A  
+{
+	public new int X {get; set;}
+}
+
+--------------------
+
+Record'larda Kalıtım
+
+- Record'lar sade ve sadece Record'lardan kalıtım alabilmektedir.
+
+- Class'lardan kalıtım alamazlar yahut veremezler.
+
+- Kalıtımın tüm temel kuralları geçerlidir. 
+- Bir record aynı anda birden fazla record'dan kalıtım alamaz.
+- Record'lar da temelde class oldukları için üretilir üretilmez otomatik olarak Object'ten türerler.
+- base ve this keyword'leri aynı amaçlar kullanabiliriz.
+- Name Hiding söz konusu olabilmektedir.
+
+record MyRecord
+{
+
+}
+
+record MyRecord2 : MyRecord
+{
+
+}
+
+Örnek: Kalıtım Hiyerarşisi Örneği
+
+using System;
+
+namespace TestInheritance
+{
+    public class Person //Person adında bir class tanımladık. name adında bir field'ı ve outName adında metodu var.
+    {
+        public string name;
+
+        public void outName()
+        {
+            Console.Write("Name: {0}", this.name);
+        }
+    }
+
+    public class Staff : Person //Staff adında Person'dan kalıtım alan bir sınıf tanımladık.
+    {
+        public int salary; //kendisinin de field ve
+
+        public void outStaff() //çıktı metodu da var.
+        {
+            outName(); //metodun içinden Person'daki outName metodunu çağırdık. this.outName();'de diyebilirdik.
+            Console.Write("\tSalary: ${0}", this.salary);
+        }
+    }
+
+    public class Student : Person //Person'dan kalıtım alan Student sınıfı oluşturduk.
+    {
+        public byte grade = 1; //grade adında yeni bir field, 
+
+        public void outStudent() //çıktı vermesi için bu metot oluşturuldu.
+        {
+            outName();
+            Console.WriteLine("\tGrade: {0}", this.grade);
+        }
+    }
+
+    public class Teacher : Staff //Teacher isimli Staff'tan kalıtım alan bir sınıf oluştur.
+    {	//ayrıca Person'dan da kalıtsal özellikleri alacaktır.
+        public int teachTime; //field
+
+        public void outTeacher() //metot
+        {
+            outStaff();
+            Console.WriteLine("\tTeach Time: {0}hrs", this.teachTime);
+        }
+    }
+
+    public class Cleaner : Staff //Staff'tan kalıtım alan bir başka sınıf oluşturuldu.
+    {
+        public string cleanArea; //field
+
+        public void outCleaner() //output metot
+        {
+            outStaff();
+            Console.WriteLine("\tClean Area: {0}", this.cleanArea);
+        }
+    }
+
+    class Program //main metodu buraya yazalım.
+    {
+        static void Main(string[] args)
+        {
+            Teacher t = new Teacher(); //Teacher sınıfından bir nesne oluşturalım.
+            t.name = "Ben"; //değerleri ver
+            t.salary = 3000;
+            t.teachTime = 500;
+            t.outTeacher(); //ve metodu çağır. bunu yaparken kalıtım gereği outName ve outStaff'da çağırılır.
+
+            Cleaner c = new Cleaner(); //Cleaner sınıfından bir nesne.
+            c.name = "David";
+            c.salary = 1500;
+            c.cleanArea = "Play Ground";
+            c.outCleaner(); //ve metodu çağır. bunu yaparken outName ve outStaff'da çağırılır.
+
+            Student s = new Student(); //son olarak Student sınıfından s nesnesi oluştur.
+            s.name = "Steven";
+            s.grade = 3;
+            s.outStudent(); //'ı çağır ve bunu yaparken outName'i de tetikle.
+
+            Console.Read();
+        }
+    }
+}
+
+Çıktı:
+Name: Ben       Salary: $3000   Teach Time: 500hrs
+Name: David     Salary: $1500   Clean Area: Play Ground
+Name: Steven    Grade: 3
+
+Örnek: Metodlar ve Constructor ile Kalıtım
+
+namespace TestInheritance2
+{
+    public class Pet //Pet adlı bir sınıf oluştur.
+    {
+        private string name; //name adlı private bir string field oluştur.
+
+        public Pet() : this("None") //default constructor'u this("None") ile tanımla. this("None") demek Pet("None") demektir. Bununla public Pet(string name) constructor'unu çağırmış oluyoruz.
+        {
+            //eğer ki bu default constructor silinirse, 
+            //Error	CS7036	There is no argument given that corresponds to the required formal parameter 'name' of 'Pet.Pet(string)' hatası alınacaktır.
+
+            //Kalıtım almış derived class Dog yaratıldığında, base class'ın default constructor'u Pet() otomatik olarak çağırılacaktır.
+            //Eğerki Pet sıfında tanımlanan başka constructor yoksa default constructor otomatik olarak yaratılacaktır.
+            //Çünkü halihazırda tek parametreli public Pet(string name) constructor'u olduğundan default constructor üretilemez ve hata alınır.
+        }
+
+        public Pet(string name) //tek parametreli bir constructor tanımla.
+        {
+            this.setName(name); //setName metodunu çağır ve name'in değerini ata.
+        }
+
+        public void setName(string name) //setName adlı bir metot tanımla.
+        {
+            this.name = name; //parametredeki değeri field'a ata.
+        }
+
+        public void outName() //outName adlı bir metot tanımlayıp private name field'ının değerini çıktı olarak ver.
+        {
+            Console.Write("Name: {0}", this.name);
+        }
+    }
+
+    public class Dog : Pet //Dog isimli Pet sınıfından kalıtım alan bir sınıf oluştur.
+    {
+        public bool isBark; //isBark isimli boolean bir field tanımla.
+
+        public Dog(bool isBark) //Dog sınıfında tek parametreli bir constructor tanımla ve parametreden gelen değeri field'a ata.
+        {
+            this.isBark = isBark;
+        }
+
+        public void outDog()
+        {
+            this.outName(); //Pet sınıfından kalıtım almış outName() metodunu çağır.
+            Console.WriteLine("\tBark: {0}", this.isBark); //isBark'ı çıktı al.
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Dog d = new Dog(true); //Dog sınıfından d nesnesi oluştur ve true değerini tek bool parametreli constructor'a gönder.
+            d.outDog(); //outDog() metodunu tetikle.
+            d.setName("Rocky"); //kalıtım ile gelen setName'i çağır ve tek string parametreli string constructor ile name'e "Rocky"'i ata.
+            d.isBark = false; //isBark'a false'ı ata.
+            d.outDog(); //tekrar outDog'u çağır.
+
+            Console.Read();
+        }
+    }
+}
+
+Çıktı:
+Name: None      Bark: True
+Name: Rocky     Bark: False

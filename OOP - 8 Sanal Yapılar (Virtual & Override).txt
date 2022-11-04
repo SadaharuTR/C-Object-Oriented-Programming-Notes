@@ -1,0 +1,421 @@
+DERS 8: Sanal Yapılar (Virtual & Override)
+
+- Bir nesne üzerinde var olan tüm memberların tamamı derleme zamanında belirgindir.
+- Yani, derleme aşamasında hangi nesne üzerinden hangi metotların çağırılabileceği bilinmektedir.
+
+class MyClass
+{
+	public int MyProperty {get;set;}
+	public void MyMethod()
+	{
+	
+	}
+}
+
+--> Compiler time
+
+--> Bu sınıftan bir nesne üreteceğim zaman bu sınıfın içerisinde hangi metotların, propertylerin olacağını biliyoruz.
+Buna derleme zamanında belirginlik diyoruz.
+
+- Sanal yapılar ile derleme zamanında kesin bilinen bu bilgi runtime'da (çalışma zamanında) belirlenebilmektedir.
+Yani ilgili nesnenin hangi metodu kullanacağı bilgisi runtime'da kararlaştırılır.
+
+Sanal Yapılar Nedir?
+
+- Sanal yapılar, bir sınıf içerisinde bildirilmiş olan ve o sınıftan türeyen alt sınıflarda da tekrar bildirilebilen yapılardır.
+Bu yapılar metot ya da property olabilir.
+
+Not: Name Hiding ile bir sınıftaki herhangi bir member'ı ondan türeyen torunlarda oluşturabiliyoruz ve buradaki
+yaşanan çakışmaya da Name Hiding diyoruz.
+
+Not: Lakin sanal yapılarda olay bu şekilde değildir. Bir sınıfta bildirilen sanal yapı(metot ya da property) bu sınıftan
+türeyen torunlarında ezilebilmekte yani devre dışı bırakılıp yeniden oluşturulabilmektedir.
+
+- Bir sınıfta tasarlanmış sanal yapının işlevinin iptal edilip edilmeme durumuna göre tanımlandığı sınıftan mı yoksa
+bu sınıfın torunlarından mı çağrılacağının belirlenmesi runtime'da gerçekleşecektir.
+
+A Object
+
+Member //bu ve
+Member //bu memberlar sanal olmadığı için derleme zamanı hangi nesneden çağırılabilecekleri bilinmektedir.
+Sanal Member //Lakin bu member sanal olduğu için kendisinden miras alan torunlarında ezilip ezilmeme/iptal edilip
+			 //yeniden yazılma durumuna göre ya A Object'ten ya da B Object'ten çağrılacaktır.
+			 //eğer ki bu sanal member ezilmezse/iptal edilmezse B object'ten miras edilecek lakin tanımlandığı
+			 //A Object'inden çağrılacaktır.
+			 //Yok eğer ezilirse ve yeniden yazılırsa, artık bu işlemin yapıldığı torunun bir member'ı olcaktır ve
+			 //B Object'inden çağrılacaktır. Fiziksel bir member olacaktır.
+---> interits
+
+B Object
+
+Member
+Member
+Sanal Member
+
+- İşte bu davranışın kararı ancak Run Time'da anlaşılacağı için Run Time'da bunların kararı verilmektedir.
+
+- Metot ya da property fark etmez! Bir sanal member'ın hangi türe ait olduğunun bu şekilde runtime'da belirlenmesine
+Geç Bağlama(Late Binding) denir!
+
+Sanal Yapılar ne için kullanılır?
+
+- Bir sınıfta tanımlanmış olan herhangi bir member'ın kendisinden türeyen alt sınıflarda Name Hiding durumuna
+düşmemeksizin ezilip/yeniden yazılıp yapılandırılması için kullanılır.
+
+Peki bu zorunlu mudur? Yani bir sanal yapı illa ki kendisinden türeyen torunlarda ezilmek/yeniden yazılmak zorunda mıdır?
+
+- Tabi ki de hayır! Bir member sanal yapıldı diye illa ki kendisinden türeyen alt sınıflarda ezilmek zorunda değildir.
+Ama ezilmek istenirse de Name Hiding'e bulaşmadan direkt ilgili sınıfın bir member'ı olacak şekilde çalışması sağlanmış olur.
+
+virtual Keyword'ü
+
+- Bir sınıfta sanal yapı oluşturabilmek için ilgili member'ın (metot ya da property) imzasını virtual keyword'ü ile
+işaretlemek yeterlidir.
+
+public virtual ya da virtual public
+
+class MyClass 
+{
+	public void MyMethod() //normal metot, MyClass'tan üretilen bütün class'larda miras olarak aktarılabilir.
+	{
+	
+	}
+}
+
+Sanal metot;
+
+class MyClass
+{
+	public virtual void MyMethod() //MyClass'tan üretilen bütün class'larda miras olarak aktarılabilir.
+	{
+	//ek olarak aktarılan bu sınıflardan herhangi birinde ezilebilir yani iptal edilip yeniden yazılabilir.
+	}
+}
+
+Normal property;
+
+class MyClass 
+{
+	public int MyProperty(get; set;) 
+	{
+	
+	}
+}
+
+Sanal property;
+
+class MyClass 
+{
+	virtual public int MyProperty(get; set;) 
+	{
+	
+	}
+}
+
+Override Keyword'ü
+
+- Bir class'ta virtual ile işaretlenerek sanal hale getirilmiş bir member(metot ya da property), bu class'tan
+miras alan torunlarında ezilmek isteniyorsa eğer ilgili class'ta imzası override ile işaretlenmiş bir vaziyette tekrardan
+aynı member oluşturulur.
+
+class MyClass 
+{
+	public virtual void MyMethod() 
+	{
+	
+	}
+}
+
+Class MyClass2 : MyClass
+{
+	public override void MyMethod() //MyMethod'u MyClass2 nesnesi üzerinden çağırırsak MyClass2'den gelecektir.
+	{
+	//MyClass'tan gelmeyecektir. Artık buraya ait. Ezildi, yenilendi.
+	}
+}
+
+- Aynı durum property'ler için geçerli.
+
+- Base class'ta ya da atalarda virtual ile işaretlenerek sanallaştırılmış herhangi bir member torunlarda illa ki override
+ile ezilmek zorunda değildir. 
+
+- Ama bir torun class base class'ta ki herhangi bir member'ı override edecekse eğer o member'ın kesinlikle virtual ile
+işaretlenmiş olması gerekmektedir.
+
+- virtual ile işaretlenmemiş bir metot kesinlikle override edilemez.
+
+Not: overide keyword'ü ileride Abstract Class'ların implementasyonunda da kullanacağız. (ileride)
+
+Örnek:
+
+namespace TestInheritance2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Terlik t = new Terlik();
+            t.Bilgi();
+
+            Kalem k = new Kalem();
+            k.Bilgi();
+        }
+    }
+
+    class Obje
+    {
+        virtual public void Bilgi()
+        {
+            Console.WriteLine("Ben bir objeyim...");
+        }
+    }
+
+    class Terlik : Obje
+    {
+        public override void Bilgi()
+        {
+            Console.WriteLine("Ben bir terliğim.");
+        }
+    }
+
+    class Kalem : Obje
+    {
+        public override void Bilgi()
+        {
+            Console.WriteLine("Ben bir kalemim.");
+        }
+    }  
+}
+
+Çıktı:
+Ben bir terligim.
+Ben bir kalemim.
+
+---------------------
+
+İkiden Çok Hiyerarşik Kalıtım Durumlarında Override Durumu
+
+- Bir class'ta virtual işaretlenmiş herhangi bir member illa ki direkt o class'tan türeyen 1. dereceden class'lar da
+override edilmek mecburiyetinde değildir.
+
+İhtiyaca göre alt seviyeden torunlardan herhangi birinde override edilebilir.
+
+A Object
+
+virtual
+
+--> interits
+
+B Object
+
+//B'yi atladık ve C'de override ettik.
+
+--> interits
+
+C Object
+
+override
+
+--> interits -->*
+
+Peki C'nin altındaki torunlarda override edilebilir mi?
+
+- İlgili soyut member'ın en son override edildiği Object'ten sonra geçerli olduğu kritiği önemlidir. 
+Ve o object'ten sonra hiyerarşik olarak türetilen sınıflar varsa onlarda da override işlemi gerçekleştirilebilir.
+
+*-->
+
+D Object
+
+
+--> interits
+
+E Object
+
+everride
+
+--> interits
+
+- A'daki virtual member C'de override edildiği zaman devamında ister D ister E'de de override edilebilir.
+
+- C'de override ettik bundan sonraki davranış D'ye E'ye de burada override ettiğimiz şekilde gönderilecektir.
+Fakat E'de tekrar override edersek bundan sonra varsa diğer sınıflarda E'deki yeni davranışı ile devam edecektir.
+
+Örnek:
+
+namespace TestInheritance2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Maymun m = new Maymun();
+            m.Konus();
+            Inek i = new Inek();  
+            i.Konus();
+        }
+    }
+
+    class Memeliler
+    {
+       public virtual void Konus()
+        {
+            Console.WriteLine("Ben konuşmuyorum.");
+        }
+    }
+
+    class Maymun : Memeliler
+    {
+        public override void Konus()
+        {
+            Console.WriteLine("Ben maymunum.");
+        }
+
+    }
+
+    class Inek : Maymun
+    {
+        public override void Konus()
+        {
+            Console.WriteLine("Ben ineğim.");
+        }
+    }  
+}
+
+Çıktı:
+Ben maymunum.
+Ben inegim.
+
+Örnek:
+
+namespace TestInheritance2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Ucgen u = new Ucgen(3, 4);
+            Console.WriteLine(u.AlanHesapla()); 
+
+            Dortgen d = new Dortgen(3, 4);
+            Console.WriteLine(d.AlanHesapla());
+
+            DikDortgen dik = new DikDortgen(3, 4);
+            Console.WriteLine(dik.AlanHesapla());
+
+        }
+    }
+
+    class Sekil
+    {
+        protected int _boy;
+        protected int _en;
+        //protected ile işaretlenmiş herhangi bir member sadece ilgili sınıft yahut o sınıftan kalıtım almış olan
+        //sınıfların içerisinde erişilebilir. Fakat nesne üzerinden erişilemez.
+        public Sekil(int boy, int en) 
+        {
+            this._boy = boy;
+            this._en = en;
+        } 
+        
+        virtual public int AlanHesapla()
+        {
+            return 0;
+        }
+    }
+
+    class Ucgen : Sekil
+    {
+        public Ucgen(int boy, int en) : base(boy,en) 
+        {
+             
+        }
+
+        public override int AlanHesapla()
+        {
+            return _boy*_en /2;  
+        }
+    }
+
+    class Dortgen : Sekil
+    {
+        public Dortgen(int boy, int en) : base(boy, en)
+        {
+
+        }
+
+        public override int AlanHesapla()
+        {
+            return _boy * _en;
+        }
+    }
+
+    class DikDortgen : Sekil
+    {
+        public DikDortgen(int boy, int en) : base(boy, en)
+        {
+
+        }
+
+        public override int AlanHesapla()
+        {
+            return _boy * _en;
+        }
+    }
+}
+
+Çıktı:
+6
+12
+12
+
+Dipnot: Static yapılar sanal olarak bildirilemezler.
+
+Örnek:
+
+using System;
+
+namespace TestVirtualOverride
+{
+    public class A
+    {
+        public int i = 1;
+        public int j = 2;
+
+        public virtual void test()
+        {
+            Console.WriteLine("A class");
+        }
+    }
+
+    public class B : A
+    {
+        new public int j = 3;     // Add new here
+
+        public override void test()    // Add new here
+        {
+            Console.WriteLine("B class");
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            A a = new A();
+            Console.WriteLine("i={0}, j={1}", a.i, a.j);    // Output i=1, j=2
+            a.test();                                       // Output A class
+            B b = new B();
+            Console.WriteLine("i={0}, j={1}", b.i, b.j);    // Output i=1, j=3
+            b.test();                                       // Output B class
+            Console.Read();
+        }
+    }
+}
+
+Çıktı:
+i=1, j=2
+A class
+i=1, j=3
+B class
+

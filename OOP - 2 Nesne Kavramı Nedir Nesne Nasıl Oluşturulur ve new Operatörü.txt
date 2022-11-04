@@ -1,0 +1,275 @@
+DERS 2 : Nesne Kavramı Nedir? Nesne Nasıl Oluşturulur? | new Operatörü
+
+- Nesneler kompleks değerlerdir. Nesneleri modellememizi sağlayan class'lar Complex Type'lardır.
+
+new Operatörü ile Nesne Üretimi
+
+- C#'ta nesne üretimi için new operatörü kullanılmaktadır.
+
+new Type() //Type -> nesnesini talep ettiğimiz class
+		   //() ise constructor method
+
+HEAP -> (Type object) //Heap'e direkt ulaşamayız.		
+
+Type x = new Type();  //Stack'e geldik. Type türünde x isminde bir referans noktası tanımladık ve bu değişkenle Heap'teki (Type object) nesnesini işaretlemiş olduk. 
+
+- Böylece x üzerinden ilgili nesneye erişebilmiş olduk.
+
+- Artık = bir assign operatörü değil referans etme - işaretleme operatörü oldu.
+
+Normalde nesneyi böyle oluşturuyorduk fakat,
+
+Target-Typed New Expressions (C# 9.0)
+
+- Nesne oluşum sürecinde, oluşturulacak olannesne eğer ki direkt bir referansa atılıyorsa eğer burda hangi nesnenin oluşturulduğu
+referans sayesinde bilinebilmektedir. Dolayısıyla ilgili nesnenin oluşturulması için;
+
+Type x = new Type(); semantiğinden ziyade,
+
+Type x = new(); şeklinde oluşturmamızı sağlayan yeni bir özelliktir.
+
+------------------------
+
+Referans Nesne İlişkisi
+
+Referans Nedir?
+
+- RAM'in Stack bölgesinde tanımlanan ve Heap bölgesindeki nesneleri işaretleyen/referans eden değişkenlerdir/noktalardır.
+
+STACK
+MyClass m
+MyInterface m
+MyAbstractClass m
+
+Ya da C# 9.0'da gelen record özelliği ile referanslar oluşturabilmekteyiz.
+
+- Oluşturduğumuz referans noktası illa ki bir class olacak demek değildir, class türevleri-akrabaları olabilecek farklı yapılanmalarda referans noktaları oluşturup
+çalışmamıza devam edebiliriz. Fakat Heap'teki nesneler sadece class'lardan oluşturulabilir. Ne Interface ne de Abstract Class'lardan nesne oluşturamayız.(ileride)
+
+- Referans'lar illa ki bir nesne referans etmek zorunda değildir!
+
+- Eğer ki bir referans herhangi bir nesne işaretlemiyorsa null değerini alır.
+
+--------------------------
+
+Stack - Heap İlişkisi
+
+MyClass m = new MyClass(); 
+//compiler'dan new keyword'ü ile nesne talep edilmiş, talep edilen MyClass türündeymiş, üretilen bu nesneyi MyClass türünden m isimli referansla işaretlemişiz.
+
+STACK				HEAP                             
+
+  m	-------------> __nesne__ //m, heap'i referans ediyor.
+
+-------------------------
+
+Örnek:  
+
+namespace OOPExamples
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			
+			MyClass m = new(); //buradaki MyProperty çalıştırılırken m'nin referans ettiği nesne üzerindeki MyProperty'i çalıştıracaktır.
+            m.MyProperty = 10; //nesne üzerinde ilgili property 10 değerine sahip.
+
+			MyClass m2 = null; //nıll olan yani nesnesi olmayan referanslar üzerinden herhangi bir member'ı çağırıp
+            m2.MyProperty = 20;	//işlemeye çalıştığımızda bu durumda null reference hatası verecektir.
+        }
+	}
+
+	class MyClass
+	{
+		public int MyProperty { get; set; }
+
+		public void X()
+		{ }
+	}
+}  
+  
+------------------
+
+Referanssız Nesneler
+
+- Bir nesne oluşturulduğu an herhangi bir referansla işaretlenmezse eğer Heap'e yerleştirilir. Lakin bu nesneye tarafımızca bir daha erişemeyiz.
+Haliyle ilgili nesneyle aramızdaki tek diyalog oluşturma anıdır.
+
+new MyClass();
+
+- Bu tip nesneler sistemde/memory'de lüzumsuz yer kaplayacağından dolayı bir süre sonra Garbage Collector dediğimiz çöp toplayıcı tarafından temizlenecektir.
+HEAP'te referanssız nesneleri imha etmekten sorumlu bir yapılanmadır. Manyaktır.
+
+new MyClass().MyProperty = 10; //sadece tanımlama anında . ile ilgili metot, field, property'lerine erişebiliriz sonra da daha kullanamayız. Sonra da imha edilecek zaten.
+
+new MyClass()
+{
+        MyProperty = 10,
+        MyProperty2 = 30,
+        MyProperty3 = 40,
+}; //aşağıdaki gibi referanssız nesneye de ilk değer atayabiliriz.
+
+------------------
+
+Object Initializer ile Nesne Oluşturma Esnasında Propertylere İlk Değer Atama
+
+namespace OOPExamples
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			
+			MyClass m = new MyClass()
+			{	
+				a = 5;
+                MyProperty = 10,
+                MyProperty2 = 30,
+                MyProperty3 = 40
+				//içerindeki propertyler verilen değerlerle oluşturulacaktır.
+            };
+			m.MyProperty = 20;
+			//sonradan değer atayabiliriz.
+
+			MyClass m2 = new MyClass();
+			//bu nesne oluşturulurken içlerindeki property'lerin değerleri default olarak verilecektir.
+			m2.MyProperty = 10;
+			//ama sonradan da değer atabiliriz tabi.
+        }
+	}
+
+	class MyClass
+	{
+		public int a;
+		public int MyProperty { get; set; }
+		public int MyProperty2 { get; set; }
+		public int MyProperty3 { get; set; }
+		
+	}
+}
+
+- Object Initializer'da sadece field ve property'lere ilk değer atanabilir. Metotlara bunu yapamayız.
+
+------------------------------
+
+Nesne Kopyalama Davranışları | Shallow Copy | Deep Copy
+
+Shallow Copy
+
+- Var olan bir nesnenin, değerin, değerin, referansının kopyalanmasıdır.
+Shallow copy neticesinde eldeki değer çoğaltılmaz, sadece birden fazla işaretlenmiş olur.
+
+Örnek:
+
+namespace OOPExamples
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			MyClass m1 = new MyClass(); //HEAP'teki ilgili nesne STACK'teki MyClass türündeki m1 tarafından işaretlendi.
+			MyClass m2 = m1; // m2 ile m1 referansı işaretlendi. Yani m2, m1'in işaretlemiş olduğu nesneyi işaretler. m1'den de m2'den de aynı nesneyi elde edebiliriz.
+			MyClass m3 = m2; // m3, m2'yi, m2'de m1'in gördüğü nesneyi referanslıyor. Yani m3'te aynı nesneyi işaretliyor.
+			MyClass m4 = new MyClass(); //bu da kendi oluşturduğu nesneyi referansıyla işaretlemiş.
+			
+        }
+	}
+
+	class MyClass
+	{
+
+	}
+}
+
+Örnek:
+
+namespace OOPExamples
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			MyClass m1 = null; //başta bir nesneyi işaret etmez.
+			MyClass m2 = new MyClass(); //m2 kendi nesnesini işaret ediyor.
+			MyClass m3 = m2; //m3'te m2'nin nesnesini işaret ediyor.
+			m1 = m3; //önceden tanımladığımız m1 referansımız m3'ün gördüğü nesneyi yani m2 ile aynı nesneyi işaretliyecek.
+			//referansların işaretlediği nesneleri bu şekilde değiştirebilmekteyiz.
+        }
+	}
+
+	class MyClass
+	{
+
+	}
+}
+
+Örnek:
+
+namespace OOPExamples
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			MyClass m1 = new MyClass(); //m1 referansı nesnesini işaretledi.
+			MyClass m2 = new MyClass(); //m2 referansı da kendi nesnesini işaretledi.
+			MyClass m3 = m1; //m3 referansı oluşturulup m1'in işaretlediği nesneyi işaretleyecek.
+			m1 = m2; //m1 önceden işaretlemiş olduğu nesneden kopup, artık m2'nin işaretlediği nesneyi işaretliyor.
+			m2 = m1; //m2, m1'in işaret ettiği nesneyi işaret edecek. Ki zaten üst satırda m1 artık m2'nin işaretlediği nesneyi işaretliyordu.
+					 //Önceki referans kopup yenisi oluşacak ve hala işaret etmeye devam edecek.
+            m1 = m1; //m1 kendisi neye işaret ediyorsa eski referans kopup yenisi oluşacak ve aynı nesneyi referans etmeye devam edecek.
+
+			//bir referans birden fazla nesneyi işaretleyemez.
+        }
+	}
+
+	class MyClass
+	{
+
+	}
+}
+
+Deep Copy
+
+- Var olan bir nesne, deep copy ile kopyalanıyorsa, ilgili nesne miktarı çoğalır. Aynı özelliklere ve değerlere sahip olan, bellekte farklı bir nesne daha oluşur.
+
+- Referans türlü değişkenlerin/değerlerin default davranışı shallow copy'dir. Değer türlü değişkenlerde default davranış deep copy'dir.
+
+MyClass m = new MyClass();
+MyClss m2 = m; //ile shallow copy yapılır.
+
+Nesne Üzerinde Deep Copy yapabilmek syntax ile değil iradelibir kod yazımı yapmak lazım.
+
+namespace OOPExamples
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			MyClass m1 = new MyClass(); 
+			MyClass m2 = m1; //shlllow
+
+			MyClass m3 = m1.Clone(); //deep copy				
+        }
+	}
+
+	class MyClass
+	{
+		public MyClass Clone()
+		{
+			return (MyClass)this.MemberwiseClone();
+			//MemberwiseClone bir sınıfın içerisinde o sınıftan üretilmiş olan o anki nesneyi klonlamamızı sağlayan ve sonucu object olarak döndüren bir fonksiyondur.
+			//object olarak tutulmuş MyClass nesnesini MyClass türünde unboxing ederek geriye döndürmek gerekir.
+		}
+	}
+}
+
+------------------------
+
+
+
+
+
+
+

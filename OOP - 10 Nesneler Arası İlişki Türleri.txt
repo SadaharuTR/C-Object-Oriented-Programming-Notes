@@ -1,0 +1,137 @@
+DERS 10: Nesneler Arası İlişki Türleri
+
+Association - Aggregation - Composition
+
+- Nesneler arasında terminolojik olarak nitelendirilebilir ilişki türleri mavcuttur. Bu ilişkiler; kalıtım, referans yahut soyutlama gibi durumların
+getisi olan mantıksal izahatlerdir.
+
+is - a ilişkisi
+has - a ilişkisi
+can - do ilişkisi
+
+nesneler kendi aralarında bu 3 şekilde somut ilişki kurabilmektedir.
+
+-----------------
+
+is - a ilişkisi
+
+- Tamamıyla kalıtımla alakalıdır. C#'da : operatörü ile gerçekleştirilir.
+
+______A_______ is a _______B______ 
+
+A bir B'dir.
+
+class Araba
+{
+
+}
+
+class Opel : Araba //Opel bir arabadır.
+{
+
+}
+
+--------------
+
+has - a ilişkisi
+
+_____Opel_____ has a ____Motor____
+
+- Bir sınıfın başka bir sınıfın nesnesine dair sahiplik ifadesinde bulunan ilişkidir. Bir yandan kompozisyon/composition ilişkisi de denmektedir.
+
+class Araba
+{
+
+}
+
+class Opel : Araba // Opel bir arabadır. is a
+{
+	Motor motor; // Opel'in bir Motor'u vardır. has a
+}
+
+class Motor
+{
+
+}
+
+-----------------
+
+can - do İlişkisi
+
+- Sonraki derslerimizde göreceğimiz interface yapılanmasının getirisi olan bir ilişki türüdür.
+
+- can do ikişkisini anlayabilmek için interface bilmek gerekir.
+
+- Kısaca interface; bir sınıfın imzasıdır. Yani bir sınıfın içerisinde olacak olan tüm member'ların şablonunu/arayüzünü oluşturduğumuz bir kontrattır.
+Herhangi bir interface'i uygulayan class o interface içerisinde tanımlanmış member imzalarını kendisinde oluşturmak zorundadır. Aksi taktirde compiler hata verecektir.
+İleride daha detaylı.
+
+- Interface'ler içlerindeki member'ların imzalarını class'lara uygulattırdıklarından dolayı o interface'ler ilgili nesnelerin yapabilecekleri kabiliyetleri göstermektedir.
+
+- Yani can do ilişkisi bir nesnenin davranışlarını/kabiliyetlerini belirtmektedir.
+
+- Bu davranış/kabiliyetler interface içerisinde tanımlanmaktadır.
+
+interface IAraba
+{
+	void Gazla();
+	void Frenle();
+}
+
+class Opel : IAraba //demek ki bu interface'i uygulayan sınıflar gazlayabilir ya da frenleyebilir.
+{
+	public void Gazla()
+	{   }
+	
+	public void Frenle()
+	{   }
+}
+
+---------------------
+
+Association Nedir?
+
+- Associationi sınıflar arasındaki bağlantının zayıf biçimine verilen addır.
+
+- Bu bağlantı oldukça gevşektir. Yani, sınıflar kendi aralarında ilişkilidir lakin birbirlerinden de bağımsızdırlar.
+
+- Parça bütün ilişkisi yoktur.
+
+- Otobüsteki yolcular ile otobüs arasındaki ilişki Association'dur. Hepsi yanı yöne gitmektedir, lakin bir yolcu indirinde bu durum otobüsün ve diğer
+yolcuların durumunu değiştirmez.
+
+Aggregation ve Composition Nedir?
+
+- Nesneleri birleştirip daha büyük bir nesne yapmaya verilen isimlerdir.
+
+- Her ikisi de birleştirilmiş nesnelerden bütünsel nesneler yapma durumlarını ifade eder.
+
+- Her ikisinde de Association'da olmayan parça-bütün ilişkisi söz konusudur.
+
+- Her ikisinde de sahiplik ilişkisi(has - a) vardır.
+
+İkisinin arasındaki fark ise;
+
+- Sahip olunan nesnenin, sahip olan nesneden bağımsız bir şekilde var olabilmesi durumudur. (Aggregation)
+  Sahip olunan nesnenin, sahip olan nesneden bağımsız bir şekilde var olamaması durumudur. (Composition)
+  
+Örnek: Bir araba düşünelim. Bu arabanın tekeri ile vitesi arasındaki ilişki;
+
+- Bu araba teker olmadan olmaz lakin teker araba  olmadan da tek başına var olabilir. (Aggregation)
+- Bu araba vites olmadan da olmaz, Ama vites araba olmadan bir anlam ifade etmez. (Composition)
+
+Örnek: Bir kitap sayfalardan ve kapaktan meydana gelmektedir.
+
+- Kitabın herhangi bir sayfasının yırtılması işlevselliğini kaybettirir. Lakin her sayfa kendi başına var olabilir. (Aggregation)
+- Kapak ise kitapla bir anlam kazanır. Kitabın dışında bağımsız bir şekilde var olmasının izahı yoktur. (Composition)
+
+Örnek: İnşa edilen duvarda; tuğlalar, çimento ve usta arası ilişki.
+
+- Duvarla tuğla arasındaki ilişki. Duvar, tuğlalardan örülmektedir. Tuğlasız duvar olmaz. Fakat tuğla duvar örme dışında farklı noktalarda da kullanılabilir.
+(Aggregation)
+
+- Duvarla çimento arasındaki ilişki. Duvar, çimentosuz olmaz. Ama çimento tek başına bir işe yaramaz.(kabul edelim)
+(Composition)
+
+- Duvarla usta arasındaki ilişki. Duvar ile usta arasında parça - bütün ilişkisi yoktur. Duvarı herhangi bir usta örebilir. Haliyle duvar ile usta arasında
+Association ilişkisi vardır.

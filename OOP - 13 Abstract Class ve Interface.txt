@@ -1,0 +1,361 @@
+Abstract Class
+
+- Abstract sınıf içerisinde abstract ile işaretlenen metotlar veya propertyler, bu sınıftan kalıtım alan her sınıfta uygulanmak zorundadır.
+
+- Abstract metot ya da propertylerin gövdeleri tanımlandıkları class içinde yazılmazlar.
+- Sadece imza dediğimiz ger dönüş tipleri, isimleri ve geri dönüş belirleyicileri tanımlanır.
+- Gövdeleri kalıtım alan sınıfta override edilerek yazılır.
+
+- Bir Abstract class içerisinde Abstract olmayan elemanlar da olabilir. Ama içerisinde Abstract elemanlar olan bir class Abstract olmak zorundadır.
+
+- Abstract elemanlar private olamazlar. 
+
+- Abstract class'lardan nesne yaratılmaz. Ama stack'teki referans noktası alınabilir.
+
+- Field'lar abstract olamaz.
+
+Örnek:
+
+namespace AbstractClass
+{
+    class Program
+    {
+        static void Main()
+        {
+
+        }
+    }
+    //
+    abstract class MyClass
+    {
+        public abstract void X(); //gövde yok sadece imza.
+        abstract public int MyProperty { get; set; } //gövde yok.
+
+
+        /*
+         * abstract olmayan elemanların kullanımı
+        public void X()
+        {
+
+        }
+
+        
+         
+        public int MyProperty { get; set; }
+
+        private int myVar;
+
+        public int MyProperty2 
+        {
+            get { return myVar; } 
+            set { myVar = value; } 
+        }
+        */
+    }
+}
+
+Örnek:
+
+- Ornek Abstract sınıfı bütün derived sınıflara (kendinden kalıtım alan bütün sınıflara) bir imza niteliği tşaıyan bir sınıftır.
+
+namespace AbstractClass
+{
+    class Program
+    {
+        static void Main()
+        {
+			// Ornek ornek = new Ornek(); hata verir. Abstact ile Interface'lerden nesne üretilmez.
+
+            Ornek ornek = new Calisma(); //Polimorfizm. ornek referansıyla Calisma nesnesi tuttuk.
+			
+            //Calisma, Ornek'ten miras alıyor. Yani her Calisma bir Ornek'tir. Ama her Ornek bir Calisma değildir.
+            //Her Calisma bir Ornek ise eğer her Ornek referansı bir çalışmayı referans edebilir.
+            //Abstract referans noktası üzerinden Abstract class'ın dervied class'larından herhangi birisinin nesnesi üzerinden
+            //çalışmamızı gerçekleştirebiliyoruz.
+
+            //ornek. dediğimizde elemanlara X, Y, Z (govdeleri Calisma'da bulunduğu için) Calisma nesnesi üzerinden erişebilir ve çalıştırabiliriz. (override ile)
+            //W elemanı da kalıtım ile geleceğinden aynı nesne üzerinden çalıştırılacaktır. (override'sız)
+        }
+    }
+    //Nesne Oluşturulmama Sebebi: Eğer ki Abstract sınıflardan nesne oluşturulsaydı, kullanım amacı genişlerdi ama tek bir amaca dönük
+	//bir yapı olmazdı.
+
+    //Abstract class'lar içerisinde Abstract olarak işaretlenmiş yapılar bu sınıftan kalıtım alan yapılara zorunlu uygulatılacağından dolayı
+    //Abstract sınıflardan nesne oluşturulması engellenmiştir.
+
+    //Abstract sınıflar başka sınıflara kalıtım vereceklerdir ve buradaki imzaları o sınıflar kullanacaktır.
+    abstract class Ornek
+    {
+        abstract public void X(); //public abstract da olabilir.
+        abstract public int MyProperty { get; set; }
+
+        abstract public bool Z(); //sonradan Z() ekleyelim.*
+
+        public void W() { } //normal metot'ta bir sorun yok. Zorunlu uygulanması şart değil.
+    }
+
+    class Calisma : Ornek //Ornek sınıfı içerisindeki member'ları kullanmazsak hata alırız. 
+    {
+       //Ctrl + . 'ya basıp Implement Abstract Class dersek;
+        public override void X() 
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int MyProperty { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public override bool Z() //*öneri ile otomatik tamamlayacaktır.
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
+
+-------------------------
+
+Interface - Arayüz Yapısı
+
+- Interface kendisinden kalıtım alacak derived class'lara (o class'lar içerisinde bulunacak elemanlara) kendi içerisinde
+o elemanların imzasını barındıran bir yapıdır. O elemanlara bir şablon bir tasarım, arayüz, arabirim özelliği gösterir.
+
+- Nesne oluşturulamaz! Doğal olarak constructor yapısı da yoktur. 
+- Ama referans noktası alabiliyoruz.
+
+namespace AbstractClass
+{
+    class Program
+    {
+        static void Main()
+        {
+            
+        }
+    }
+
+    class Ornek : IOrnek, IOrnek2
+    {
+       //bir sınıfın birden fazla interface'den kalıtım alması mümkündür.
+    }
+
+    interface IOrnek //Interface yapılarında isimlendirmede başta I ile kullanmak tercih edilir. Zorunluluk değildir. Visual Studio'da hazır interface'ler de I ile başlar.
+    {
+        //bireysel çalışmalardan ziyade toplu ve design patternlarda İmza-Şablon özelliğinden dolayı kullanılır. 
+    }
+
+    interface IOrnek2
+    {
+
+    }
+}
+
+- Abstract class'lar içerisinde kendisinden kalıtım alan sınıfta yazılması zorunlu olmayacak yapılar da tanımlayabilirdik.
+Fakat, interface de sadece imza özelliği olduğundan dolayı kendisinde herhangi bir yapının gövdesi tanımlanamaz.
+
+- Interface içerisinde imzası tanımlanmış yapıların gövdeleri interface'den kalıtım alan class'lar oluşturulur.
+
+- Interface içerisinde static yapı olamaz.
+
+- imzalarda public, private, protected cs. gibi erişim belirleyicileri olmaz.
+
+Örnek:
+
+namespace InterfaceOrnek
+{
+    class Program
+    {
+        static void Main()
+        {
+            
+        }
+    }
+
+    class Ornek : IOrnek
+    {
+        
+        int OrnekProperty { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        int IOrnek.OrnekProperty { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        //ampulden implement interface diyelim.
+        public int X()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Y()
+        {
+            throw new NotImplementedException();
+        }
+
+    }
+
+    interface IOrnek 
+    {
+        int X();
+        void Y();
+
+        int OrnekProperty { get; set; }
+    }
+    
+}
+
+
+Name Hiding Durumu - Implement interface'de aynı isimde metot kullanırsak;
+
+- Implement interface uygulanan elemanlara ilgili sınıfın nesnesi üzerinden erişebilirken diğer durumda erişemiyoruz.
+
+Örnek:
+
+namespace InterfaceOrnek
+{
+    class Program
+    {
+        static void Main()
+        {
+            
+        }
+    }
+
+    class Ornek : IA, IB
+    {
+        public void m() //Implement interface ile public erişim belirleyicisi ile gelir. 
+        {
+            throw new NotImplementedException();
+        }
+
+        public void n()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void x() //ortak olmayan memberların hepsi fakat ortak olanın sadece biri gelmiş.
+        {   //bu x()'in hangisinden geldiğini bilmediğimiz için Name Hiding dediğimiz istenmeyen durumla karşılaşırız.
+            throw new NotImplementedException();
+        }
+
+        public void y()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void z()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    interface IA 
+    {
+        void x();
+        void y();
+        void z();   
+    }
+    interface IB
+    {
+        void x();
+        void m();
+        void n();
+    }
+    
+}
+
+Bunu çözmek için, ampüle tıklayıp Implement interface explicitly'i seçmemiz gerekli.
+
+namespace InterfaceOrnek
+{
+    class Program
+    {
+        static void Main()
+        {
+            Ornek o = new Ornek();
+            //o.yazdığımızda Implement interface ile memberlara nesne referansı üzerinden erişebiliriz.
+            //Implement interface explicitly ile Name Hiding'den kurtuluruz ama memberlara erişemeyiz.
+			
+			IA a = new Ornek(); //polimorfizm ile bu sorun çözülebilir.
+            //a. yazarsak ilgili memberlara erişebiliriz.
+			
+			IB b = new Ornek();
+			//b. yazarsak ilgili memberlara erişebiliriz.
+        }
+    }
+
+    class Ornek : IA, IB
+    {
+        void IB.m() //bu yöntemde ise private şeklinde gelir.
+        {
+            throw new NotImplementedException();
+        }
+
+        void IB.n()
+        {
+            throw new NotImplementedException();
+        }
+
+        void IA.x() //artık hangisinden
+        {
+            throw new NotImplementedException();
+        }
+
+        void IB.x() //geldiğini görebiliyoruz.
+        {
+            throw new NotImplementedException();
+        }
+
+        void IA.y()
+        {
+            throw new NotImplementedException();
+        }
+
+        void IA.z()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    interface IA 
+    {
+        void x();
+        void y();
+        void z();   
+    }
+    interface IB
+    {
+        void x();
+        void m();
+        void n();
+    }    
+}
+
+Örnek: Sınıf ve Interface'lerin Beraber Kalıtım Alma Durumu
+
+namespace InterfaceOrnek
+{
+    class Program
+    {
+        static void Main()
+        {
+            
+        }
+    }
+
+    class C //eğer ki bir sınıftan da kalıtım alsın isteniyorsa,
+    {
+	 ...	
+    }
+
+    class Ornek : C, IA, IB //önce o sınıf yazılır ardından virgülle gelenlerin mecburen interface olması gerekir.
+    {
+     ...   
+    }
+
+    interface IA 
+    {
+     ...     
+    }
+    interface IB
+    {
+     ...   
+    }
+    
+}
+
+- C# 8.0 ile interface içerisinde tanımlanan imzalarda artık member'lar Access Modifiers alabilmekte ve gövde oluşturulabilmektedir.
+Ayrıca static member'lar da kullanılabilmektedir.

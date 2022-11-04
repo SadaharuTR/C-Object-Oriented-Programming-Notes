@@ -1,0 +1,605 @@
+Static Keyword
+
+- Erişim belirleyicisinden hemen sonra gelmesi tercih edilir.
+
+Eğer metot static değilse bu şekilde kullanıyorduk:
+
+namespace Ornek
+{
+    class Program
+    {
+        public static void main (string[] args)
+        {
+            Musteri M1 = new Musteri();
+            M1.SelamVer();
+        }
+    }   
+    public class Musteri
+    {
+         public void SelamVer()
+        {
+
+        }
+    }
+}
+
+Eğer metodumuz/değişkenimiz static olarak tanımlanmışsa yukarıdaki gibi o class'tan bir obje oluşturup referans örneği
+üzerinden erişmek zorunda değiliz.
+
+namespace Ornek
+{
+    class Program
+    {
+        public static void main (string[] args)
+        {
+            Musteri.SelamVer(); //static ise class ismi üzerinden metoda erişebiliriz.
+        }
+    }   
+    public class Musteri
+    {
+         public static void SelamVer()
+        {
+
+        }
+    }
+}
+
+----------------
+
+Static Metot Kullanımı
+
+- Console'da bir class'tır. Console. yazdığmızda WriteLine metodunu görebiliriz. Class ismiyle direkt olarak
+erişebildiğimize göre WriteLine'da Console sınıfı içerisinde static olarak tanımlanmış bir metot'tur.
+ReadLine'da aynı şekilde.
+
+- Aynı şekilde aşağıdaki örnekte de static keyword'ü ile obje oluşturmadan direkt isimle erişebiliriz.
+
+Örnek:
+
+namespace OOPExamples
+{
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            Personel.isimSoyisimYazdir();
+            Personel.sayilariTopla(10, 20);
+        }
+    }
+
+	class Personel
+    {
+        public static void isimSoyisimYazdir()
+        {
+            System.Console.WriteLine("Ali Veli");
+        }
+
+        public static void sayilariTopla(int sayi1, int sayi2)
+        {
+            Console.WriteLine($"İki sayinin toplamı {sayi1 + sayi2}.");
+        }
+    }
+}
+
+Çıktı: 
+Ali Veli
+Iki sayinin toplami 30.
+
+---------------
+
+Static Değişken Kullanımı
+
+Örnek:
+
+namespace OOPExamples
+{
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            Calisan C1 = new Calisan();
+
+            C1.calisanID = 1; //bu üç değişkene static değil.
+            C1.isim = "Ali";  //bu yüzden obje oluşturarak referans üzerinden erişip
+            C1.soyisim = "Veli"; //işlem yaptık.
+
+            Calisan.maas = 2500; //fakat aynı metotlarda olduğu gibi static değişkenlere de
+			//class ismi üzerinden erişebildik.
+            Console.WriteLine($" Çalışan ID: {C1.calisanID} \n İsim: {C1.isim} \n Soyisim {C1.soyisim} \n Maaş: {Calisan.maas}");
+        }
+    }
+	
+	public class Calisan
+    {
+        public int calisanID;
+        public string isim;  
+        public string soyisim;
+
+        public static int maas;      
+    }
+}
+
+Çıktı:
+ Çalisan ID: 1
+ Isim: Ali
+ Soyisim Veli
+ Maas: 2500
+ 
+- Aynı şekilde Calisan sınıfı içerisindeki değişkenleri Property olarak da tanımlayabilirdik.
+
+public class Calisan
+    {
+        public int calisanID { get; set; }
+        public string isim { get; set; }
+        public string soyisim { get; set; }
+
+        public static int maas { get; set; }     
+    }
+	
+Çıktı değişmeyecektir. Sadece C1. veya Calisan. dediğimizde değişken ikonu yerine ingiliz anahtarı
+olan Property ikonu gelecektir.
+
+-------------------
+
+Static Constructor/Yapıcı Metot Kullanımı
+
+Static yapıcı metotlar: 
+- Erişim belirleyicisi kullanamaz. (!)
+- Parametre alamaz. (!)
+- Sınıfa ait tüm yapıcılardan önce çalışır.
+- Kaç nesne örneği oluşturulursa oluşturulsun sadece 1 kere çalışır. (Önemli!)
+- Bir sınıf sadece bir static yapıcı metot içerebilir.
+- Static yapıcı metot ya ilk nesne örneği oluşturulduğunda ya da ilk static sınıf üyesi çağrılmadan
+hemen önce yürütülür.
+
+Örnek:
+
+namespace OOPExamples
+{
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            Kullanici K1 = new Kullanici(1, "Ali", "Bayram");
+            //class'tan bir nesne ürettiğimiz zaman ilk yapıcı metoda gider.
+            //Ve ilk olarak static yapıcı metot çalışır. Parametreli constructor'a gitmez.
+            //maas'a 2500'ü atar sonra diğer parametreli yapıcı metot'a girer ve işlemlerini yapar.
+			
+			// Kaç nesne örneği oluşturulursa oluşturulsun sadece 1 kere çalışır. (Önemli!)
+            Kullanici K2 = new Kullanici(2, "Uğur", "Mahmut");
+
+            //bu sefer static metot çalışmayacaktır.
+			//ancak standart yapıcı metot her obje oluşturulduğunda çalışır.
+			
+			K1.bilgileriGoster();
+            K1.zamYap(700);
+
+            K2.bilgileriGoster();
+            K2.zamYap(700);
+		}
+    }
+	public class Kullanici
+    {
+        
+        private int kullaniciID { get; set; } //sadece bu class içerisinden erişilebilsin.
+        private string isim { get; set; }
+        private string soyisim { get; set; }
+
+        private static int maas { get; set; }
+
+        static Kullanici() //public erişim belirleyicisi yerine static yazarsak static constructor olur.
+        {
+            maas = 2500; //maas property'si static olmasaydı erişemezdik.
+        }
+
+        public Kullanici(int kullaniciid, string isim, string soyisim) //Kullanici sınıfının yapıcı metodu
+        {
+            kullaniciID = kullaniciid;
+            isim = isim;
+            soyisim = soyisim;
+        }
+
+        public void bilgileriGoster()
+        {
+            Console.WriteLine($" Kullanıcı ID: {kullaniciID} \n İsim: {isim} \n Soyisim {soyisim} \n Maaş: {maas}");
+        }
+
+        public void zamYap(int zamMiktari)
+        {
+            Console.WriteLine("Kullaniciya zam yapılıyor...");
+            Console.WriteLine("Şuanki maaşı: " + (maas + zamMiktari));
+        }
+    }
+}
+
+Çıktı:
+ Kullanici ID: 1
+ Isim:
+ Soyisim
+ Maas: 2500
+Kullaniciya zam yapiliyor...
+Suanki maasi: 3200
+ Kullanici ID: 2
+ Isim:
+ Soyisim
+ Maas: 2500
+Kullaniciya zam yapiliyor...
+Suanki maasi: 3200
+
+----------------------
+
+Static Class Kullanımı
+
+- Static class'lardan obje oluşturulamaz.
+- Static class'ların içinde static olmayan bir şey tanımlanamaz.
+- Static class'lardan kalıtım yapılamaz.
+- Static class'lar diğer class'larda kullanılacak bir grup alakalı metot'ları gruplamak açısından faydalıdır. Static class'lara System.Math class'ı güzel bir örnektir.
+  namespace System -> Class ismi Math 
+  Bize bir çok matematiksel metot sağlar.
+  double result = Math.Cos(angle); // Math class'ında bulunan Cos()metodu bize cosinus değerini verir.
+
+Örnek:
+
+namespace OOPExamples
+{
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            /*
+			Musteri M1 = new Musteri(); //hata verir.
+			*/	
+        }
+    }
+	
+	public static class Musteri
+    {
+		/*
+        public int id; //hata. static değil.
+        */
+		
+		public static int id; //hata ortadan kalktı.
+		
+		/*
+		public void yazdir() //hata
+        {
+
+        }
+		*/
+		
+		public static void yazdir() //hata ortadan kalkar.
+        {
+
+        }
+    }
+}
+
+- Static class'lardan kalıtım yapılamaz.
+
+	public static class Musteri
+    {       
+        public static void yazdir()
+        {
+
+        }
+    }
+
+    public class Personel : Musteri
+    {
+    //Error	CS0709	'Personel': cannot derive from static class 'Musteri'
+    }
+	
+ya da
+
+	public static class Musteri
+    {        
+        public static void yazdir()
+        {
+
+        }
+    }
+
+    public static class Personel : Musteri
+    {
+    //Error	CS0713	Static class 'Personel' cannot derive from type 'Musteri'. Static classes must derive from object.	
+    
+    }
+	
+ya da 
+
+	public class Musteri
+    {
+        
+        public static void yazdir()
+        {
+
+        }
+    }
+
+    public static class Personel : Musteri
+    {
+    //yapılamıyor işte zorlamamak lazım.    
+    }
+	
+------------------------
+
+ArrayList Tekrar
+
+- Bir koleksiyon türüdür. İçerisinde yardımcı metotlar barındırır. İstediğimiz türde değişkeni tutmamızı sağlayan bir sınıftır.
+
+Normal bir array tanımlarsak, (primitive-ilkel dizi)
+
+		public static void Main(string[] args)
+        {
+            string[] isimler = { "Enes", "Ahmet", "Yusuf", "Ercan" };
+
+            foreach (string a in isimler)
+            {
+                Console.WriteLine(a);
+            }
+        }
+		
+Bu şekilde elemanları ekranda görebiliriz.
+
+Aynı örneği ArrayList ile yaparsak;
+
+using System.Collections; //kütüphanesini eklemek şart.
+
+		public static void Main(string[] args)
+        {
+            ArrayList koleksiyon = new ArrayList();
+            //ArrayList sınıf olduğu ve içerisinde hazır metotlar barındırdığı için çok daha verimli ve hızlı bir kullanımdır.
+            //koleksiyon. dediğimiz an bir sürü metot'a erişim sağlayabildiğimizi görürüz.
+
+            koleksiyon.Add("Enes"); //değer eklemek için Add
+            koleksiyon.Add("Ali");
+            koleksiyon.Add("Yusuf");
+            koleksiyon.Add("Mehmet");
+
+            koleksiyon.Remove("Yusuf"); //değer kaldırmak için Remove
+
+            foreach (var a in koleksiyon)
+            {
+                Console.WriteLine(a);
+            }
+        }
+
+Aynı çıktıyı alırız.
+
+Örnek: Metot kullanımları.
+
+namespace OOPExamples
+{
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            ArrayList koleksiyon = new ArrayList();
+            //ArrayList sınıf olduğu ve içerisinde hazır metotlar barındırdığı için çok daha verimli ve hızlı bir kullanımdır.
+            //koleksiyon. dediğimiz an bir sürü metot'a erişim sağlayabildiğimizi görürüz.
+
+            koleksiyon.Add("Enes"); //koleksiyonun sonuna değer eklemek için Add
+            koleksiyon.Add("Ali");
+            koleksiyon.Add("Yusuf");
+            koleksiyon.Add("Mehmet");
+
+            //koleksiyon.Remove("Yusuf"); //herhangi bir değer kaldırmak için Remove
+
+            //koleksiyon.Clear(); //dizinin tüm elemanlarını sil
+
+            Console.WriteLine("Var mı? " + koleksiyon.Contains("Yusuf")); //Mehmet diye bir değer var mı? True.
+            Console.WriteLine("Var mı? " + koleksiyon.Contains("Yasin")); //Yasin yok. False.
+
+            Console.WriteLine("Kişinin index no: " + koleksiyon.IndexOf("Ali")); //Ali kaçıncı index'te?
+
+            koleksiyon.Insert(3, "Sercan"); //3. index'e Sercan'ı ekle.
+
+            Console.WriteLine();
+
+            koleksiyon.Reverse(); //diziyi ters çevirir.
+
+            foreach (var a in koleksiyon)
+            {
+                Console.WriteLine(a);
+            }
+            Console.WriteLine($"Dizinin eleman sayısı: {koleksiyon.Count}"); //Count property'si ile eleman sayısını..        
+        }
+    }
+}
+
+Örnek:
+		public static void Main(string[] args)
+        {
+            ArrayList rakamlar = new ArrayList();
+
+            rakamlar.Add(4);
+            rakamlar.Add(2);
+            rakamlar.Add(66);
+            rakamlar.Add(6);
+            rakamlar.Add(41);
+
+            rakamlar.Sort(); // diziyi küçükten büyüğe sıralar. 2-4-6-41-66 yazılır alt alta.
+
+            foreach(int a in rakamlar)
+            {
+                Console.WriteLine(a);
+            }
+        }
+		
+Örnek: Static Fields Örneği
+
+namespace StaticFields
+{
+    public class Student //Student adında public bir class oluşturalım.
+    {
+        public string name;
+        public int score;
+    }
+
+    public class MyClass //MyClass adında bir public class oluşturalım.
+    {
+        const int MAX = 50; //MAX adlı integer constant bir değer oluşturalım.
+        public static int students; //student isimli, sınıftaki öğrenci sayısını tutacak bir static integer field tanımlayalım.
+
+        public static void Main() //Main metodunda sadece class içerisinde tanımlanabilen bir static metot olduğuna dikkar edelim.
+        {
+            Student s1 = new Student(); //Student'tan bir nesne oluştur.
+            s1.name = "Tom"; //değerleri ata
+            s1.score = 90;
+            MyClass.students++; //static students değerini bir arttır. Class ismiyle eriştik dikkat.
+
+            Student s2 = new Student(); //Student'tan bir başka nesne oluştur.
+            s2.name = "Peter";
+            s2.score = 80;
+            students++; //üstteki ile aynı ifade çünkü students aynı sınıfta olduğundan MyClass'ı yazmamıza gerek yok.
+
+            Student s3 = new Student();
+            s3.name = "Sam";
+            s3.score = 70;
+            StaticFields.MyClass.students++; //yine aynı ifade ama böyle bir kullanım da var.
+
+            Console.WriteLine("Students in the class: {0}", students); //çıktılarımızı alalım.
+            Console.WriteLine("Maximum students allowed: {0}", MyClass.MAX); //const özünde bir static'tir. Yani class ismiyle de çağrılabilir.
+            Console.Read();
+        }
+    }
+}
+
+Çıktı:
+Students in the class: 3
+Maximum students allowed: 50
+
+Örnek:
+
+namespace StaticMethods
+{
+    public class Circle //cirle isimli bir public class tanımla
+    {
+        const double PI = 3.14; //Constant double PI sayısı
+        public double radius;
+
+        public static void Main()
+        {
+            Circle c = new Circle(); //Circle'dan nesne oluştur.
+            c.radius = 1.0; //yarıçapı 1.0 yap.
+
+            Console.WriteLine("Non-Static Method Area: {0}", c.getArea()); //nesne üzerinden çağırabiliriz.
+            Console.WriteLine("Static Method Area: {0}", getArea(10.0)); //aynı class'ta olduğundan direkt çğaırabiliriz.
+
+            Console.Read();
+        }
+
+        public static double getArea(double r)
+        {
+            //return getArea(); //hata verir static olmayan bir metot nesne referanssız çağrılamaz.
+            return PI * r * r;
+        }
+
+        public double getArea() //statik olmayan metot
+        {
+            //return getArea(this.radius); //burada hata vermez. Aynı class'ta iken static metot çağrılabilir. Aynı çıktı alınır. Ama alttaki satıra erişemeyiz. Tek bir return olabilir.
+            return PI * radius * radius;
+        }
+
+    }
+}
+
+Çıktı:
+Non-Static Method Area: 3.14
+Static Method Area: 314
+
+Örnek: Static Class'lar
+
+namespace StaticClass
+{
+    public static class Area //Alan isimli static bir class tanımladık. static bir class sadece static member'lara sahip olabilir.
+    {
+        const double PI = 3.1416; //const bir static'dir.
+
+        public static double Rectangle(double length, double width) //static Rectangle metodu ile dikdörtgenin alanını hesaplayan bir metot.
+        {
+            return length * width;
+        }
+
+        public static double Triangle(double baseline, double height) //aynısı üçgen için,
+        {
+            return baseline * height / 2.0;
+        }
+
+        public static double Square(double side) //kare için,
+        {
+            return Rectangle(side, side);
+        }
+
+        public static double Circle(double radius) //daire için.
+        {
+            return PI * radius * radius;
+        }
+    }
+
+    public class TestArea
+    {
+        public static void Main()
+        {
+            Console.WriteLine("Rectangle: length=10 width=10  Area={0}", Area.Rectangle(10, 10));
+            Console.WriteLine("Triangle:  base=10   height=10 Area={0}", Area.Triangle(10, 10));
+            Console.WriteLine("Square:    side=10             Area={0}", Area.Square(10));
+            Console.WriteLine("Circle:    radius=10           Area={0}", Area.Circle(10));
+            Console.Read();
+        }
+    }
+}
+
+Çıktı:
+Rectangle: length=10 width=10  Area=100
+Triangle:  base=10   height=10 Area=50
+Square:    side=10             Area=100
+Circle:    radius=10           Area=314,16
+
+Örnek:
+
+using System;
+
+namespace StaticConstructor
+{
+    public class A
+    {
+        static A()
+        {
+            Console.WriteLine("Static constructor");
+        }
+
+        public A()
+        {
+            Console.WriteLine("Instance constructor");
+        }
+    }
+
+    public class TestA
+    {
+        public static void Main()
+        {
+            Console.WriteLine("Before creating a1");
+            A a1 = new A();
+            Console.WriteLine("After creating a1");
+
+            A a2 = new A();
+            Console.WriteLine("After creating a2");
+            Console.Read();
+        }
+    }
+}
+
+Çıktı:
+Before creating a1
+Static constructor
+Instance constructor
+After creating a1
+Instance constructor
+After creating a2
+
+
+
+
+
+		

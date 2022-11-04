@@ -1,0 +1,686 @@
+DERS 1: Nesne Anatomisi - Referans Türlü Değişkenler
+
+- Günümüzde nesne tabanlı programlama birçok modern dil tarafından desteklenir haldedir.
+- Yazılım geliştirme süreçlerini oldukça kısaltan ve sistematik hale getiren bir tekniktir.
+
+- Gerçek hayatı programlama için simüle eden nesneleri baz alan bir programlama tekniğidir.
+- Her şey bir nesnedir. İnsan, personel, ürün, satış, araba...
+
+- Gerçek bir sistem, nesnel parçalara ayrılır ve bu parçalar(nesneler) arasında ilişkiler kurulur.
+- Nesneler kendi aralarında haberleşebilir.
+
+Nesnenin Anatomisi
+
+- OOP'nin en küçük esas parçası nesne/obje/object'tir.
+
+- Nesneler içerisinde veri tutabilecekleri alanlar barındırırlar. Biz bu alanlara field diyeceğiz.
+
+- Nesneler içerisinde field'lardaki değerleri işleyebilmesi için fonksiyonlar mevcuttur. Bu fonksiyonlara ileride metotlar, propertyler veya
+indexer'lar diyeceğiz.
+
+- Tüm nesneler aslında bir sınıf modellemesinin örneğidir.
+
+Nesne Modellemesi
+
+- Nesnelerin oluşturulabilmesi için öncelikle modellenmesi gerekmektedir. Nesne modeli class ile gerçekleştirilir.
+
+- Car adında bir class oluşturalım. Oluşturulan bu Car modeli sayesinde bizler istediğimiz araba verilerini taşıyan nesneler üretebiliriz.
+Audi, Nissan, Volvo hepsi birbirinden farklı birer Car nesnesidir. Daha doğrusu class Car adlı nesne modelinden üretilen nesnelerdir.
+
+---------------------------
+
+- Nesneler referans türlü değişkenlerdir.
+
+Referans Türlü Değişkenler
+
+- Kod yazarken Stack'teki değişkenlere isimleri üzerinden erişebilmekteyiz. Örneğin a dediğimizde 5 değerini elde edebilmekteyiz.
+Lakin Heap'e erişim hakkımız bulunmamaktadır.
+
+- Heap'teki nesnelere biz direkt erişemesekte Stack'teki referanslar erişebilmektedir. Biz de, Stack'te Heap'teki nesneleri işaret eden
+referanslar tanımlarız. Haliyle Stack'teki referans'a erişebilir ve dolaylı olarak o referans aracılığıyla Heap'teki nesneye erişmiş oluruz.
+
+	Stack                     	   Heap
+
+(Nesne1) r1   --r1 referansı->    Nesne 1 //r1 ile Nesne 2'yi referans ediyorum.
+(Nesne2) r2   --r2 referansı->    Nesne 2
+(Nesne3) r3   --r3 referansı->    Nesne 3
+
+Stack'teki değişkenler Heap'teki değerlere işaretleme yapıyor, referans ediyor.
+
+---------------------------
+
+Class Kavramı
+
+- OOP'de bir object oluşturabilmek için öncelikle o objenin modellenmesi, tanımlanması gerekmektedir.
+- Bir objenin modelini, tanımını oluşturabilmek için class yapısı kullanılır.
+
+Model -> (Field, Property, Indexer, Metotlar) --class--> object
+
+- Class'larda nesnelerdeki ortak alan tanımları yapılır.
+
+Class               ----------->     Object1    //Class içerisindeki member'lar class'tan üretilen tüm nesnelerde ortak olarak bulunur.
+									 Object2	//buradan da Adi ve YasHesapla'ya ulaşılabilir.
+Adi(Field)							 Object3	//buradan da... 
+YasHesapla(Metot)
+
+---------------
+
+Sınıf Oluşturma
+
+class [isim]
+{
+
+}
+
+- class'lar bir referans türüdür. 
+
+- class'lar namespace içerisinde, namespace dışarısında ve class içerisinde(nested type) oluşturabilir.
+
+-Aynı amaca hizmet eden özellikleri, sınıfları ve fonksiyonları bir çatı altında toplarken, bu çatıya verdiğimiz isime isim alanı (namespace) denir.
+
+Namespace İçerisinde:
+
+using System;
+
+namespace OOPExamples
+{
+	class Program
+	{
+
+	}
+
+	class MyClass
+	{
+
+	}
+}
+
+Namespace Dışarısında:
+
+using System;
+
+class MyClass2
+{
+
+}
+
+namespace OOPExamples
+{
+	class Program
+	{
+
+	}
+
+	class MyClass
+	{
+
+	}
+}
+
+- Aynı namespace altındaki class'lar birbirlerine direkt isim üzerinden erişebilirken, farklı namespace altındaki sınıflar birbirlerine namespace ismi üzerinden
+erişebilir. Namespace ismi belirtilmeyen class'lara ise herkes erişebilir.
+
+Class İçerisinde Tanımlama:
+
+class MyClass
+	{
+		class MyClass3
+		{
+		
+		}
+	}
+	
+- Bir class tanımlamasında tanımlanan yerde(namespace/dışı, class) aynı isimde birden fazla class tanımlanamaz!
+
+Sınıf ile Nesne Modeli Oluşturma
+
+class OrnekModel
+{
+	int a; //değişkenler
+	int b;
+
+	public void X() //metorlar
+	{
+		Console.WriteLine(a + " " + b);
+	}
+	public int Y()
+	{
+		return a*b;
+	}
+}
+
+Sınıf Modelinden Referans Noktası Oluşturma
+
+- Bir class tanımlandığında o class adı bir türdür. Haliyle o türü kullanabilmek için direkt olarak class adını kullanmamız yeterlidir.
+
+using System;
+
+namespace OOPExamples
+{
+
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			OrnekModel w; //OrnekModel class'ı türünde bir referans noktası, bir değişken tanımlarız.
+			//referans noktası alma, referans noktası ayarlama, referans alma.
+			//şu anda herhangi bir nesneye referans etmiyor. Sadece tanımlama yaptık. İleride detaylı.
+		}
+
+	}
+
+	class OrnekModel
+	{
+		int a;
+		int b;
+
+		public void X()
+		{
+			Console.WriteLine(a + " " + b);
+		}
+		public int Y()
+		{
+			return a * b;
+		}
+	}
+}
+
+- Eğer ki bir referans noktasında herhangi bir nesne referans edilmiyorsa o referans null değere sahiptir.
+
+---------------------
+
+Class Members
+
+Field Yapılanması
+
+- Nesne içerisinde veri deopladığımız/tuttuğumuz alanlardır.
+
+- Class içerisindeki değişkenlerdir. Herhangi bir türden olabilir.
+
+using System;
+
+namespace OOPExamples
+{
+
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			MyClass m1 = new MyClass(); 
+			//new keyword'ü ile MyClass'tan bir nesne oluşturabiliriz. Oluşturulan bu MyClass nesnesini
+			//MyClass türünden m1 referansıyla işaretliyoruz. ='in sağı HEAP'e nesneyi koyacak, ='in solu ise Stack'teki m1 referansıyla
+			//Heap'teki nesneyi işaretleyecek.
+			//m1. dediğimiz zaman içerisindeki tüm elemanlara erişebileceğiz.
+			m1.a = 5;
+			m1.b = "Comolokko";
+
+			MyClass m2 = new MyClass();
+			m2.a = 25; //m1'in a'sı kendine ait bir alanken, m2'nin a'sı da kendine ait bir alandır.
+            m2.b = ""; 
+		}
+
+	}
+
+	class MyClass
+	{
+		//m1.a hata verir. a public değil.
+		//int a; 
+		//MyClass'tan üretilen tüm nesnelerde a isimli bir alan olacaktır ve ona integer türünden bir değer atıyabiliyor olacağız.
+		//public int a; dersek Main'den de erişebiliriz.
+		public int a;
+		public string b;
+	}
+}
+
+- Field'lar türüne özgü varsayılan değer alırlar.
+
+class MyClass
+{
+	int a; //Stack'te a'ya 0 değeri atanır. integer'ın varsayılanı 0'dır.
+}
+
+- Eğer bir değişken class içerisinde field olarak tanımlanıyorsa default değeri verilir. Yok eğer class'ta değil metot vs. içerisinde (main de dahil)
+tanımlanıyorsa default değeri verilmez! Hata verir ve değer atanmasını ister.
+
+-------------
+
+Property Yapılanması
+
+- Nesne içerisinde özellik/property sağlar. Property esasında bir metottur. Yani programatik/algoritmik kodlarımızı inşa ettiğimiz bir metot.
+Lakin fiziksel olarak metottan farkı parametre almamakta ve içerisinde get ve set olmak üzere iki adet blok almalarıdır.
+
+public int X() //Bir metot.
+{
+	return 0;
+}
+
+Ve bu metodun Property muadili diyebileceğimiz Property:
+
+public int X //Property'de parantez yoktur.
+{
+	get
+	{
+		return 0;
+		//Property'nin değeri okunmak istendiğinde/çağrıldığında get bloğu tetiklenir ve get bloğundan değeri return edilir.
+	}
+	set
+	{
+	//Property'e atanan veri buradan yakalanır.
+	}
+}
+
+- Property'nin işlevsel açıdan metottan farkı yoktur. Lakin davranışsal olarak nesne üzerinde bir değer okuma ve değer atama işlemlerinde kullanılır.
+
+- Bu bloklar compile neticesinde get ve set isimli metotlar olarak karşımıza çıkmaktadır. 
+
+- Yazılımcılar olarak nesnelerimiz içerisindeki field'lara direkt erişilmesini istemeyiz. Dolayısıyla field'lardaki verileri kontrollü bir şekilde
+dışarıya açmak isteriz. İşte böyle bir durumda diğer dillerdeki gibi metotları kullanabiliriz. Fakat C#'ta hem metotları hem Property'leri kullanabiliriz.
+
+- Developer'lara "Ancak benim kontrolümde buradaki değeri elde edebilirsin." demek lazım. İlgili field'daki değerin hepsi veya bir kısmını talep edene gönderilir.
+Böylece kontrol sağlanmış olur.
+
+- Sonuç olarak Property yapıları özünde nesne içerisindeki bir field'ın dışarıya kontrollü açılmasını ve kontrollü bir şekilde dışarıdan değer
+almasını sağlayan yapılardır.
+
+Not: Biz property'lerin bu işlevine Encapsulation(Kapsülleme/sarmalama) diyeceğiz.
+
+-------------------
+
+Encapsulation(Kapsülleme/Sarmalama)
+
+- Bir nesne içerisindeki dataların(field'lardaki verilerin) dışarıya kontrollü bir şekilde açılması ve kontrollü bir şekilde veri almasıdır.
+
+Property İmzaları
+
+- Property yapısı oluşturabilmenin yapılsal olarak birkaç farklı yolu/farkı imzası vardır.
+(Full Property, Prop, Auto Property Initializers, Ref Readonly Returns, Computed(Hesaplanmış) Properties, Expression-Bodied Property, Read Only Property
+ve C# 9.0'da gelen Init-Only Properties and Init Accessor)
+
+Full Property
+
+- En sade property yapılanmasıdır. İçerisinde get ve set blokları tanımlanmalıdır
+
+[erişim belirleyicisi] [geri dönüş-alış değeri] [property adı]
+{
+	get {		} //property'den veri istendiğinde tetiklenir.
+	set {		} //Property'de veri gönderildiğinde tetiklenir. Gönderilen veriyi value keyword'ü ile yakalar.
+}
+
+- Full propertylerde set bloğu tanımlanmazsa sadece okunabilir(readonly); get bloğu tanımlanmazsa sadece yazılabilir(write only) olacaktır.
+
+using System;
+
+namespace OOPExamples
+{
+
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			MyClass myClass = new MyClass();
+			//myClass. dediğimiz an yasi property'si ingiliz anahtarı biçiminde gelir. Mor-pembe kutular ise metot'tur.
+			Console.WriteLine(myClass.Yasi); //get bloğu tetiklenir.
+
+			myClass.Yasi = 65; //değer atarken de set bloğu tetiklenir.
+
+			Console.WriteLine(myClass.Yasi); //yine get bloğu tetiklenir ve yasi = 65 olur.	
+		}
+
+	}
+
+	class MyClass
+	{
+		int yasi;
+		string b;
+
+		//Property hangi türden bir field'ı temsil ediyorsa o türden olmalıdır.
+		//Genellikle temsil edecekleri field'ın isminin baş harfi büyük olan yazımı ile isimlendirilirler. 
+		public int Yasi
+		{
+			get 
+			{ 
+				return yasi; //property üzerinden değer talep edildiğinde bu blok tetiklenir. Yani değer buradan gönderilir.              
+            }	
+			set 
+			{ 
+				yasi = value;  
+			}	
+		}
+	}
+}
+
+Örnek:
+
+	class Banka
+	{
+		int bakiye;
+
+		public int Bakiye
+		{
+			get 
+			{
+				if(bakiye > 0)
+					return bakiye * 10 /100;
+				return 5;
+			}
+			set 
+			{
+				if (value < 10)
+					bakiye = value; //10 liranın altındaysa kesinti yapma.
+				else
+					bakiye = value * 95 / 100; //mesela burada işlem ücreti almış olabiliriz.
+			}
+		}
+	}
+	
+- Karşı taraf aldığı parayı bilmeli. O sürecin nasıl gerçekleştiğini bilmesine gerek yok.
+
+- Bir property'nin sadece get bloğunu yazıp set'i yazmaksak sadece get'i kullanabiliriz. Aynısı set içinde geçerli. Böylece Property'i readonly ve writeonly yapabiliriz.
+
+PROP
+
+- Bir Property her ne kadar encapsulation yapsa da temsil ettiği field'daki dataya hiç müdahele etmeden erişilmesini ve veri atanmasını sağlıyorsa böyle bir durumda
+kullanılan property imzasıdır.
+
+- Ne gerek var? Ahlaki sebepler. Field'daki değere müdahele olsun olmasın direkt erişim yapılmasını istemiyoruz. Haliyle yine de property kullanacağız.
+
+[erişim belirleyicisi] [geri dönüş-alış değeri] [property adı]{	get; set; }
+
+- Prop property'ler compile edildiklerinde arkaplanda kendi field'larını oluştururlar. Dolayısıyla bir field tanımlamaya gerek yoktur.
+
+	class MyClass 
+	{
+		int yasi; //field
+		public int Yasi //Full Property
+		{
+			get 
+			{ 
+				return yasi;    
+            }	
+			set 
+			{ 
+				yasi = value;  
+			}	
+		}
+	}
+
+tek satırda Prop ile aynı işi yapabiliriz.
+
+	class MyClass 
+	{
+	public int Yasi { get; set; }	
+	}
+	
+Sonuç olarak;
+
+namespace OOPExamples
+{
+
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			MyClass myClass = new MyClass();
+			//kendi field'ımı tanımlamıza gerek yok. Eğer ki tanımlamak istiyorsak Prop kullanmacağız.
+			myClass.Yasi = 12; //değer tanımlayıp,
+			Console.WriteLine(myClass.Yasi); //değer okuyabiliriz.
+		}
+
+	}
+
+	class MyClass
+	{
+        public int Yasi { get; set; } //compiler seviyesinde bir değer atanacaktır.
+
+    }
+}	
+
+-------------------
+
+Auto Property Initializers (C# 6.0)
+
+- Bir property'nin ilk değerini nesne ayağa kaldırılır kaldırılmaz aşağıdaki gibi verebiliriz.
+
+class InsanEntity
+{
+	public string Adi { get; set; } = "Genco";
+	public string Soyadi { get; set; } = "Star";
+	public int Yasi { get; set; } = 23;
+}
+
+Not:
+- Prop property'ler readonly olabilir ama writeonly olamaz.
+
+public int Yasi { get; } = 23; olur.
+public int Yasi { set; } = 15; writeonly olamaz.
+
+-----------------------
+
+Ref Readonly Returns
+
+- ref only returns, bir sınıf(class) içerisindeki field'ı referansıyla döndürmemizi sağlayan ve bir yandan bu değişkenin değerini readonly yapan özelliktir.
+
+	class MyClass
+	{
+		//artık MyClass üzerinden Adi property'sine eriştiğimde
+		string adi = "Alican Cano"; //buradaki değere değil,
+		public ref readonly string Adi => ref adi; //bu değeri temsil eden adi field'ına erişmiş olacağız.
+
+		//bunun getirisi hem bellek optimizasyonu hem de bunu static yapılanmaya çevirdiğimizde daha da efektif bir kodlama yapmamızı sağlayacaktır.
+		//ileride daha detaylı.
+    }
+
+----------------------
+
+Computed(Hesaplanmış) Property
+
+- İçerisinde türetilmiş bir bağıntı taşıyan property'dir.
+
+int s1 = 5;
+int s2 = 10;
+
+public int Topla
+{
+	get
+	{
+		return s1 + s2;
+	}
+}
+
+------------------------
+
+Expression - Bodied Property
+
+- Tanımlanan property'de Lambda Expression kullanmamızı sağlayan söz dizimidir.
+
+public string Cinsiyet
+{
+	get
+	{
+		return "Erkek";
+	}
+}
+
+aynı ifadeyi;
+
+public string Cinsiyet => "Erkek";
+
+yazabiliririz. Bu şekilde expression-bodied ile imzalanan propertyler read only olarak oluşturulacaktır.
+
+------------------------
+
+Init-Only Properties - Init Accessor (C# 9.0)
+
+- Init-Only Properties, nesnenin sadece ilk yaratılış anında propertylerine değer atamaktadır.
+
+- Böylece iş kuralı gereği run time'da değeri değişmemesi gereken nesneler için bir önlem alınmaktadır. Init-Only Properties, developer açısından süreç
+esnasında değiştirilmemesi gereken property değerlerinin yanlışlıklı değiştirilmesinin önüne geçmekte ve olası hata ve buglardan yazılımı arındırmaktadır.
+
+- Böyle bir durumda akla direkt Auto Property Initializers gelebilir. Sonraki derslerde görülecek Object Initializer desteği Init-Only'de gelmektedir.
+Auto property-initializers object initializers'a izin vermemektedir. Lakin bu özelliği Init-Only Properties desteklemekte ve sonrasında readonly özelliği göstermektedir.
+
+--------------------
+
+Indexer
+
+- Nesneye indexer özelliği kazandıran, fıtrat olarak property ile birebir aynı olan elemandır.
+
+[erişim belirleyicisi] [geri gönüş değeri] this [ parametreler ]
+{
+	get {     } -> indexer'dan veri istenildiğinde tetiklenir.
+	set {	  } -> indexer'a veri gönderildiğinde tetiklenir. Gönderilen veriyi value keyword'ü ile yakalar.
+}
+
+public int this [int a]
+{
+	get
+	{ 
+	return a;
+	}
+	set 
+	{
+	
+	}
+}
+
+Çağırırken de;
+
+..main..
+{
+	MyClass myClass = new MyClass();
+	myClass[5] = 10;
+}
+
+------------------------
+
+Class İçerisinde Tanımlanan Class Sınıf Elemanı mıdır?
+
+class MyClass
+{
+	int a; //field bir class elemanıdır.
+	public int MyProperty { get; set; } //property bir class elemanıdır.
+	public void X() {} //metot bir class elemanıdır.
+	public int this [int a] //indexer class elemanıdır.
+    {
+        get {return 0; }
+    }
+	class MyClass2
+	{
+	//nested class'lar class elemanı değildir. 
+	//tek farkı, MyClass2'ye erişmek için MyClass.MyClass2 m2 = new MyClass.MyClass2(); yazmamız gerek. Bu kodun türü MyClass2'dir.
+	}
+}
+
+-------------------------
+
+Class Elemanlarına Açıklama Satırı Nasıl Eklenir?
+
+Random random = new Random();
+//Random'un üzerine geldiğimizde sınıfa dair bir açıklama görürüz.
+//Represents a pseudo-random number generator, which is an algorithm that produces a sequence of numbers that meet certain statistical requirements for randomness.
+//metotlarında overload'larında açıklamalar mevcuttur.
+
+Bu açıklamayı kendi sınıflarımıza eklemek için;
+
+MyClass myClass = new MyClass();
+//myClass. yazdığımızda açıklamaların eklendiğini kontrol edebiliriz.
+
+
+/// <summary>
+/// Bu bir örnek class'tır.
+/// </summary>
+class MyClass
+{
+	int a; 
+	/// <summary>
+	/// Bu bir örnek property'dir.
+	/// </summary>
+	public int MyProperty { get; set; } 
+	
+	/// <summary>
+	/// Bu bir örnek metot'tur.
+	/// </summary>	
+	
+	public void X() {} 
+	
+	/// <summary>
+	/// Bu bir örnek metot overload'dur.
+	/// </summary>	
+	/// <param name ="a">a da parametresidir.</param>
+	public void X(int a) {} 
+
+
+	public int this [int a] 
+    {
+        get {return 0; }
+    }
+	class MyClass2
+	{
+	
+	}
+}
+
+----------------------
+
+this Keyword'ü Nedir? İşlevleri Nelerdir?
+
+- 1) Sınıfın nesnesini temsil eder.
+- 2) Aynı isimde Field ile Metot parametrelerini ayırmak için kullanılır.
+- 3) Bir contructer'dan bir başka contructer'u çağırmak için kullanılır.
+
+1) Sınıfın nesnesini temsil eder.
+
+MyClass m1 = new MyClass();
+MyClass m2 = new MyClass();
+
+//m1.X m1 üzerinden X'i çağırdığımızda kullanlan this m1 nesnesini temsil eder.
+//m2.X m2 üzerinden X'i çağırdığımızda kullanlan this m2 nesnesini temsil eder.
+
+class MyClass
+{
+    //this keyword'ü sadece member'ların içerisinde çağırılmalıdır.
+	public void X()
+    {
+        //ilgili sınıftan oluşturulan nesneyi, sınıf modellemesinde temsil etmeyi sağlayan keyword'dür.
+        //this
+		//bir class'ın içerisinde this keyword'ünü görüyorsak bilmeliyiz ki o class'tan o anda üretilmiş olan nesne neyse o nesneyi temsil eden bir keyword'dür.
+		//kullanım amacı değişebilir.
+    }
+}
+
+İleride daha detaylı.
+
+--------------------------
+
+2) Aynı isimde Field ile Metot parametrelerini ayırmak için kullanılır.
+
+class MyClass
+{
+    int a;
+    public void X(int a)
+    {
+        this.a //field'daki a'yı temsil eder. Nesnenin member'ı olan a gelir.
+        a //parametre olan a'yı temsil eder.
+
+    }
+}
+
+- this keyword'ü ilgili class yapılanmasının o anki nesnesine karşılık gelir.
+- this kullanmak zorunda değiliz.
+
+class MyClass
+{
+    int a;
+    public void X()
+    {
+        a //bu şekilde kullanımda compiler seviyesinde zaten otomatik this kullanılmaktadır.
+		//sadece parametre ve field ismi aynı ise ayırt etmek için this kullanmak zorundayız.
+    }
+}
+
+Not: Typescript denilen Javascript'te this aynı anlama gelir. Fakat o dilde kullanmak zorunludur. C#'da this zorunlu değildir. Sınıf modelinin içerisinde
+nesneyi temsil edecek this'i kullanmasak da olur.
+
+3) Bir contructer'dan bir başka contructer'u çağırmak için kullanılır.
+
+İleride...

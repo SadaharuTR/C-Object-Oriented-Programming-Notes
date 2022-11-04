@@ -1,0 +1,91 @@
+DERS 6: Positional Record Nedir?
+
+- Norminal Record'lar Object Initializer'lar ile ilk değerleri verilerek üretebilen readonly datalardı.
+
+- Positional Record'lar ise esasında Record'lar içerisinde tanımlama yapabildiğimiz constructor ve deconstructor
+kullanımlarını daha da özelleştirerek kullanılmasını sağlar.
+
+record MyRecord
+{
+    public MyRecord()
+    {
+
+    }
+
+    public void Deconstruct()
+    {
+
+    }
+}
+
+yapmaktansa;
+
+record MyRecord(string name, string surname)
+{
+    
+}
+
+tanımladığımızda yukarı semantik arka planda name ve surname propertyleri tanımlayacak ve bu propertylerin özellikleri de init olacaktır.
+
+public class Program
+{
+    static void Main(string[] args)
+    {
+        MyRecord m = new MyRecord("ali", "veli");
+        var (n, s) = m;
+               
+    }   
+}
+
+record MyRecord(string name, string surname) //record name(... , ...) bu semantik positional record özelliğidir.
+{
+//(string name, string surname) parametrelerinin karşılığı olarak compiler seviyesinde propertyler otomatik oluşturulacaktır.
+//bu propertyler oluşturulurken init olacak şekilde oluşturulur.
+}
+
+- Bir tek Record yapılanmasına özeldir.
+
+- Bir Record üzerinde constructor ve deconstructor yapılanmasını hızlı bir şekilde oluşturmamızı sağlayan bir semantik yapılanmadır.
+
+- Positional Record kullanırken parametrelerin karşılıkları olan propertyleri manuel olarak oluşturmak zorunda değiliz.
+
+Peki ayrıca Constructor tanımlayabilir miyiz?
+
+public class Program
+{
+    static void Main(string[] args)
+    {
+        MyRecord m = new MyRecord(); //boş constructor kullanıyorsak ve bu record'da positional record varsa
+        var (n, s) = m;            
+    }   
+}
+
+record MyRecord(string name, string surname) //positional record'un bize getirdiği constructor'u tetiklemek her daim şart.
+{
+    public MyRecord() : this ("ali", "veli.") //bunlara buradan değerlerini göndermek zorundayız.
+    {
+
+    }
+}
+
+-------------------------
+
+Peki ayrıca Property oluşturabilir miyiz? - Evet ama pek tercih edilmez. Property'leri kendi oluşturmuş olduğumuz isimlerde kullanabiliriz.
+
+public class Program
+{
+    static void Main(string[] args)
+    {
+        MyRecord m = new MyRecord("ali", "veli");
+
+        Console.WriteLine(m.Name + " " + m.Surname);
+
+        var (n, s) = m;            
+    }   
+}
+
+record MyRecord(string name, string surname) //fakat bunu yapınca Positional Record'un oluşturmuş olduğu diğer property'lerde duracaktır.
+{
+    public string Name => name;
+    public string Surname => surname;   
+}

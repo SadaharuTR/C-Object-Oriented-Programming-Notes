@@ -1,0 +1,329 @@
+Access Modifiers - Erişim Belirleyicileri
+
+Public ve Private Kardeşler (Naruto ile Sasuke)
+
+namespace AccessModifiers
+{
+    public class Musteri
+    {
+        public string isim; //public hiçbir kısıtlaması yok. Her yerden erişilebilip kullanılabilir.
+        public string soyisim;
+        public int maasDegeri;
+        public string cinsiyet;
+        private int yas;
+
+        public void musteriBilgileriGoster()
+        {
+            Console.WriteLine($" İsmi: {isim} \n Soyisim: {soyisim} \n Maaşı: {maasDegeri} \n Cinsiyet: {cinsiyet} \n Yaşı: {yas}");
+        }
+
+        private void IsimSoyisimYazdir(string musteriisim, string musterisoyisim)
+        {
+            Console.WriteLine($"Musterinin ismi {musteriisim} ve soyismi {musterisoyisim}");
+        }
+
+        public Musteri()
+        {
+            Console.WriteLine("Müşteri sınıfının yapıcı metodu tetiklendi.");
+            yas++; //class içerisinden erşililebilir.
+            IsimSoyisimYazdir("Ali", "Muhtar"); //class içerisinden erşililebilir.
+        }
+    }
+
+    public class Program
+    {
+        public static void Main()
+        {
+            Musteri musteri1 = new Musteri();
+
+            musteri1.isim = "Enes";
+            musteri1.soyisim = "Bayram";
+            musteri1.maasDegeri = 2500;
+            musteri1.musteriBilgileriGoster(); //private metot değil erişilebilir.
+
+            //musteri1.yas = 21; //Hata. private olduğundan başka class'tan erişilemez. Değişken, field ya da metot; private ise dış dünyaya kapalıdır.
+                               //Sadece bulundukları class {} scope'undan erişilebilirler.
+                               
+        }
+    }
+}
+
+-----------
+
+Internal Kullanımı
+
+Örnek:
+
+namespace AccessModifiers
+{
+    class Kisi //class'ların default'u ise internal'dır.
+    {
+        //string Ad; //diğer yazımı private Ad;
+
+        internal string Ad; //aynı assembly'de yani dll ve exe dosyasındaki tüm her yerde ulaşılabilir demektir. Başka assembly'den ulaşılamaz.
+		//başka bir projede ise private olarak davranır.
+	}
+
+    public class Program
+    {
+        public static void Main()
+        {
+            Kisi kisi = new Kisi();
+
+            kisi.Ad = "Ali";
+
+            Console.WriteLine(kisi.Ad); 
+                               
+        }
+    }
+}
+
+------------------
+
+
+Protected ve Protected Internal
+
+Örnek: Protected
+
+namespace AccessModifiers
+{
+    class A : B
+    {
+        public void yaz()
+        {
+            //buradan x'e ulaşabiliriz.
+            //protected sadece türetilmiş class'larda kullanılabilir.
+            //burada A, B'den türediği için kullanabiliriz.
+            x = 5;
+        }
+    }
+    class B
+    {
+        protected int x;
+    }
+
+
+    public class Program
+    {
+        public static void Main()
+        {
+            //buradan x'e ulaşamayız.
+            A nesne = new A();
+            nesne.x = 8; //HATA
+
+            B nesne2 = new B(); 
+            nesne2.x = 5;//hata
+        }
+    }
+}
+
+-------------
+
+Protected Internal
+
+//öncelikle protected erişim belirleyicisi taşıdığı için derived class'larda kullanılabilir.
+//Aynı solution içerisinde fakat farklı bir proje ya da Namespace (isim alanı) içerisinde olan bir sınıf başka bir sınıfı miras almış 
+//(inheritance) ve ilgili alan Protected Internal ile tanımlanmış ise bu alana ulaşabiliriz.
+
+- Protected internal olarak tanımlanmış değer, tanımlandığı class’ın içinden ve ondan türetilen sınıfların içinden erişilebilir durumdadır. 
+Türetilen sınıfın aynı program içinde olmaması sorun teşkil etmez.
+
+Örnek:
+
+using System;
+
+namespace Tutlane
+{
+    class User
+    {
+        protected internal string Name; //aynı assembly içerisindeki herhangi bir yerden ya da
+        protected internal string Location; //başka bir assembly'deki herhangi bir türetilmiş class'tan erişilebilir.
+        protected internal int Age;
+        protected internal void GetUserDetails()
+        {
+            Console.WriteLine("Name: {0}", Name);
+            Console.WriteLine("Location: {0}", Location);
+            Console.WriteLine("Age: {0}", Age);
+        }
+    }
+    class Program
+    {
+       static void Main(string[] args)
+       {
+          User u = new User(); //User class'tan üretilmiş nesneler üzerinden elemanlara erişebiliyoruz.
+          u.Name = "Suresh Dasari";
+          u.Name = "Suresh Dasari";
+          u.Location = "Hyderabad";
+          u.Age = 32;
+          u.GetUserDetails();
+          Console.WriteLine("\nPress Enter Key to Exit..");
+          Console.ReadLine();
+       }
+    }
+}
+
+Private Protected
+
+- Private Protected’a gelirsek eğer; bu erişim belirleyicisiyle işaretlenen elemanlar, protected oldukları için ilgili sınıftan türeyen 
+sınıflardan erişilebilirken, private oldukları için sade ve sadece aynı assembly(namespace) içerisinden erişilebilecektirler. 
+Yani private burada farklı bir namespaceler arasındaki protected elemanlara olan erişimi engellemektedir.
+
+- farklı bir Class Library’de bulunan sınıf içerisindeki Private Protected erişim belirleyicili elemanımız o sınıftan kalıtım alan 
+sınıfımız içerisinde Private özellik göstermiş bulunmaktadır. Halbuki Class Library içerisindeki farklı bir sınıf içinde bu işlemi 
+yapsak aynı assembly içerisinde olduklarından dolayı ilgili elemana protected olduğundan dolayı erişilebilecektir.
+
+-------------------------
+
+Struct Yapısı
+
+struct MyStruct //değer tiplidir. Stack'te bulunur.
+{
+
+//şeklinde tanımlanır.
+//16 byte'ın altındaki verilerde kullanılır. 
+//veriler net olmalıdır.
+
+//default constructor yoktur.
+	public MyStruct
+	{ // hata verir }
+	
+//ama parametreli constructor tanımlanabilir.
+	public int y; 
+	public MyStruct (int x)
+	{ // hata ortadan kalkar.
+		y = x;
+	}
+
+~MyStruct() //Hata. Destructor bir nesne Heap'ten silinmeden önce çalışan metot'dur.
+//Struct'un Heap ile alakası yok.
+
+	public int a; //struct'ta değişken oluşturabiliriz,
+	public static int b;
+	public int x = 2; //hata alırız. Ama değer veremeyiz.
+}
+
+class MyClass //referans tiplidir. Heap'tedir.
+{
+//16 byte'ın üstündeki verilerde kullanılır.
+//field, metot, property'lerin hepsinin kullanımı Struct ile benzerdir.
+
+	public int x = 0; //Class'ta değişken tanımlayabilir ve direkt değer verebiliriz.
+}
+
+- Stack'te büyük veriler taşınamadığı için (overflow hatası) Heap var olmuştur.
+
+Main'den ulaşmak için;
+
+static void Main()
+{
+	//class'ta nesne oluşturup değişkene ulaşıp değiştirip yazdırdık.
+	MyClass nesne = new Myclass();
+	nesne.x = 10; //class'ta değer ataması yapmasaydık default olarak 0 atardı.
+	CW(nesne.x);
+	
+	//struct'ta direkt isim verip çağırabiliriz.
+	MyStruct isim;
+	isim.a = 15; //eğer ki burada değer ataması yapmasaydık hata alırdık.
+	CW(isim.a);
+	
+	//değer vermeden çağırma yapmak istiyorsak
+	CW(MyStruct.b); //MyStruct üzerinden çağırabiliriz.
+	//b static bir değişken olduğundan ilk varsayılan değerini alır.
+	//ve ekrana 0 yazılır.
+	
+	//static yapmadan çözüm.
+	MyStruct isim = new MyStruct();
+	CW(isim.a); //0 yazdığını görürüz.
+
+	ya da
+	
+	MyStruct isim2 = new MyStruct(10); // ile parametreli Struct constructor'una değer gönderip işlem yapabilir ve
+	CW(isim2.y); //10 yazdığını görebiliriz.
+}
+
+Örnek:
+
+namespace StructYapisi
+{
+	class Program
+	{
+		static void Main()
+		{
+			MyClass nesne = new MyClass();
+			nesne.x = 50; //yapmamıza rağmen ekrana 30 yazdırır.
+			Degistir(nesne);
+			CW(nesne.x); //referans tipli olduğu için,
+			
+		}
+		static void Degistir(MyClass a) //buraya geldiğinde direkt orjinali gelecektir.
+		{
+			a.x = 30; //ve burada 30'a eşitlenecektir.
+		}
+	}
+
+	class MyClass
+	{
+		public int x;
+	}
+}
+
+fakat Struct olsaydı,
+
+namespace StructYapisi
+{
+	class Program
+	{
+		static void Main()
+		{
+			MyStruct isim = new MyStruct(); //Struct'lar değer tipli olduğu için,
+			isim.b = 50; //orjinali 50 olduğu için,
+			Degistir(isim); //değer kopyalanacaktır.*
+			CW(isim.b); //ekrana 50 yazdırılacaktır.
+			
+		}
+		static void Degistir(MyStruct a) 
+		{
+			a.b = 30; //*kopya 30 olacaktır.
+		}
+	}
+
+	struct MyStruct
+	{
+		public int b;
+	}
+}
+
+Örnek:
+
+using System;
+
+struct Circle //struct Circle tanımla.
+{
+    public double radius; //radius ilk değerini veremeyiz.
+    const double PI = 3.14; //fakat const ve static field'lara ilk değer atanabilir.
+
+    public void area() //alanın çıktısını hesapla ve output ver
+    {
+        Console.WriteLine("Area: {0}", radius * radius * PI);
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Circle c; //new operatörü olmadan Circle c oluşturabiliriz.
+        c.radius = 10; //c'yi kullanarak radius'a değer atadık.
+        c.area(); //c nesnesinin tüm field'larına ilk değer atandığı için metodu çağırabiliriz.
+
+        Console.Read(); 
+    }
+}
+
+Çıktı:
+Area : 314
+
+Not: Struct, protected yapılarla kullanılamaz çünkü struct member'lar kalıtım'da kullanamaz. (aynı şekilde private protected ve protected internal)
+
+Not: C#'ta Struct member'lar default olarak private'dır.
+

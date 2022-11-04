@@ -1,0 +1,391 @@
+DERS 3: Derinlemesine Encapsulation Nedir?
+
+- Encapsulation, nesnelerimizdeki field'ların kontrollü bir şekilde dışarıya açılmasıdır.
+Bir başka deyişle, nesnelerimizi başkalarının yanlış kullanımlarından korumak için kontrolsüz değişime kapatmaktır.
+
+Property'lerden önce bu işlem metotlar ile yapılıyordu.
+
+namespace OOPExamples
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			MyClass m = new MyClass();
+			m.ASet(15);
+			Console.WriteLine(m.AGet());
+        }
+	}
+
+	class MyClass
+	{
+		private int a;
+		public int AGet()
+		{ 
+			return this.a; //a field'ının değerini okumak istiyorsak AGet() fonk. kullan.
+		}	
+		//MyClass nesnesinde AGet() fonksiyonu tetiklendiğinde this'deki yani o anki nesnedeki a field'ını değerini geri gönder.
+		
+		public void ASet(int value)
+			{ this.a = value; }	
+		//dış dünyadan a field'ına bir değer vermek istiyorsak ASet() kullan.
+	}
+}
+
+- Artık;
+
+namespace OOPExamples
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			MyClass m = new MyClass();
+
+			m.A = 123;
+			Console.WriteLine(m.A); //otomatik olarak get set durumunu ayarlar.
+        }
+	}
+
+	class MyClass
+	{
+		int a;
+
+		public int A
+		{
+			get { return a; }
+			set { a = value; }
+		}
+
+	}
+}
+
+- Property'ler ile daha kolayca halledebiliyoruz.
+
+---------------------
+
+Record Nedir? OOP'de ki Yeri Neresidir?
+
+Ön Hazırlık: Init Only Properties
+
+- C#'da herhangi bir nesnenin propertylerine ilk değerlerinin verilmesi ve sonraki süreçte bu değerlerin değiştirilmemesini garanti altına almamızı sağlayan
+Init Only Properties özelliği gelmiştir.
+
+- Bu özellik sayesinde nesnenin sadece ilk yaratılış anında propertylerine değer atanmakta ve böylece iş kuralları gereği tunrime'da değeri değişmemesi gereken
+nesneler için ideal bir önlem alınmaktadır.
+
+Property'nin değerinin değiştirilmemesi ? Bunun için readonly propertler yani getter-only (sadece get işlemi yapan) propert'ler yok mu?
+
+	class Book
+	{
+		public string Name { get; } = "Mahalle Kahvesi"
+		public string Author { get; }
+		public Book()
+		{
+			Authorization = "Saik Fait Asabıyanık";
+		}
+	}
+	
+- Doğru, yukarıdaki örnekte olduğu gibi tanımlanan propertyler sadece get olduklarından dolayı ya tanımlandıkları anda ya da sadece constructr'dan değer
+alabilmektedir.
+
+- Yeni gelen Init Only Properties özelliği ile mevcudiyetteki getter-only properties arasında Object Initializer işlevselliği farkı vardır.
+
+Book book = new Book
+{
+	Author = "Şiirlerim",
+	Name = "Cemal Süreya"
+};
+
+- Değer atamaya çalıştığımızda hata veriyorsa bunlar getter-only properties yani eski readonly yapılanmasıdır.
+
+- C# 9.0 ile gelen Init Only Properties özelliği ile hata vermez.
+
+Init Only Properties Tanımlama
+
+- init keyword'ü ile;
+
+	class Book
+	{
+		//get-init bir araya geldiğinde bu property readonly olmakta ve ilk değerlerini constructor
+		//yahut auto property initializers üzerinden(alt satırdaki) alabileceği gibi init sayesinde 
+		public string Name { get; init; } = "Mahalle Kahvesi"; //bu property artık Init Only demiş olduk. Hem readonly hem de Object Initializer edilirken değeri atanabilir.
+		public string Author { get; init; }
+		public Book()
+		{
+			Authorization = "Saik Fait Asabıyanık";
+		}
+	}
+	
+Artık hata vermez;
+
+    Book book = new Book
+    {
+        Author = "Şiirlerim", //hem ilk değerleri verdik.
+        Name = "Cemal Süreya" //hem de readonly yaptık.
+    };
+    Book.Name = "Veli Konak"; //readonly olduğu için bu satır hata verir.
+    
+	Console.WriteLine(book.Author); //istediğimiz gibi okuyabiliriz.
+    Console.WriteLine(book.Name);    
+
+- init, get keyword'ü olmaksızın kullanılamaz. Ayrıca yapısı gereği set bloğu da kullanılamaz.
+
+- Ayrıca getter-only-properties ile çalışmaktansa readonly bir field üzerinde işlem yapmamız gerekiyorsa eğer aşağıdaki gibi 'init' bizlere eşlik edebilmektedir.
+
+class Book
+{
+	private readonly string name;
+	private readonly string author;
+	public string Name
+	{
+		get => name;
+		init => name = value;
+	}
+	public string Author
+	{
+		get => author;
+		init => author = value;
+	}
+}
+
+- Böylece C# yeniliklerinden olan init-only-properties sayesinde, nesnelerin ilk yaratılış esnasında salt okunabilir değerlerini vermek için Object Initializer'ı
+bloklamadan kullanabilmekteyiz.
+
+--------------------
+
+Örnek:
+
+		class MyClass
+        {
+            readonly int a;
+
+            public int A
+            {
+                get { return a; }
+                set { a = value } //hata. a readonly. set çalışmaz.
+            }            
+        }
+
+fakat nesne oluşturulurken nesne oluşum sürecinde değer atamak istersek init olarak bildirdiğimizde init bloğu hem set görevi görür hemde bir kereliğine mahsus
+oluşturma anında ilgili field'a değeri atar.
+
+		MyClass my = new MyClass
+		{
+			A = 5
+		};
+
+		class MyClass
+        {
+            readonly int a;
+
+            public int A
+            {
+                get { return a; }
+                init { a = value } 
+            }            
+        }	
+
+--------------------------
+
+Records Nedir?
+
+- C# ile gelen Init Only Properties özelliği nesne üretim esnasının dışında değişmez değerler oluşturulması için constructor ve auto property initializers yapısının yanında
+object initializer yapısının kullanılabilir olmasını sağlıyordu.
+
+- Bir nesnenin sadece tek bir property'si readonly/sabit/değişmez ise biz bunu Init Only Properties özelliği ile sağlıyoruz.
+
+- Eğer bir nesneyi bütünsel olarak değişmez yapmak istiyorsak o zaman daha fazlasına yani Records türüne ihtiyacımız olacaktır. Gelen nesne tamamen, değişmeyen değerlerden
+ibaret olacaksa Record yapılanması kullanılır. Bir property'den ziyade nesnenin genel değişmezliğini sağlar.
+
+- Böylece bu obje-nesne, artık değeri değişmeyeceğinden dolayı esasında objeden ziyade bir değer gözüyle bakılan bir yapıya dönüşmektedir.
+
+- Buradan yola çıkarak record'ları, içerisinde data barındıran lightweight(hafif) class'lar olarak değerlendirebiliriz.
+
+- Record'lar bir class'tır. Fakat, class'lara istinaden objeden ziyade içerisinde bulunan dataları sabitleyerek nesneden ziyade verilerini/datalarını ön plana çıkarmaktadır.
+
+|Class| ---> new ----> instance(nesne) ----> x //x ve y referanslar
+|	  | ---> new ----> instance(nesne) ----> y
+	  
+|Record|---> new ----> instance(nesne) ----> a = 5, b=10 ---> x //x ve y referanslar
+|prop a|---> new ----> instance(nesne) ----> a = 5, b=10 ---> y
+|prop b|	  
+
+- Class'larda verilsel olarak nesne ön plandadır ve bir farklı referansa sahip olan nesne farklı değer olarak algılanmaktadır.
+- Dolayısıyla Equals(x,y) karşılaştırması yanlış olarak döner.
+
+- Record'lar ise verisel olarak değeri ön planda tutar. Sadece, nesnel olarak bu veriler bir objede tutulmakta lakin değiştirilememektedir.
+- Haliyle farklı objelerde de olsa veriler(property değerleri) aynı olduğu sürece Equals(x,y) önermesi doğru olacaktır.
+
+- Her iki türde de veriler objede tutulmakta lakin record'lar class'lara nazaran, bir objeden ziyade topyekün veri imajında olacak şekilde özel bir davranış sergiler.
+
+Record Tanımlama
+
+Prototip:
+
+record [Name]
+{
+}
+
+- Aşağıdaki gibi tanımlanan record'lara Norminal Records denmektedir.
+
+public record Book
+{
+	public string Name { get; init; }
+	public string Author { get; init; }
+}
+
+Örnek:
+
+record MyRecord
+{
+    public int MyProperty { get; init; } //aynı class'lar gibi property
+
+    public void X() { } //fonksiyon
+    public MyRecord() { } //constructor
+    ~MyRecord() { } //deconstructor
+
+    static MyRecord() { } //statik constructor kullanabiliriz.
+    
+}
+
+Örnek:
+
+using System;
+
+MyClass m1 = new MyClass()
+{
+    MyProperty = 5
+};
+
+MyClass m2 = new MyClass()
+{
+    MyProperty = 5
+};
+
+
+MyRecord m3 = new MyRecord()
+{
+    MyProperty = 5
+};
+
+MyRecord m4 = new MyRecord()
+{
+    MyProperty = 5
+};
+
+Console.WriteLine(m1.Equals(m2)); //nesne ön planda False döner.
+Console.WriteLine(m3.Equals(m4)); //değer ön planda True döner.  
+
+
+record MyRecord
+{
+    public int MyProperty { get; set; } //init olarak tanımlasak daha record'un amacına hizmet eder.
+
+}
+class MyClass
+{
+    public int MyProperty { get; set; }
+}
+
+---------------------
+
+Örnek:
+
+- Record'lar değiştirilemez objeler oluşturmamızı sağlamaktadır. Bu değiştirilemez objeler clss'lar ile gerçekleştirilemez mi?
+
+- Görüldüğü üzere içinde init olan(yani readonly) property'ler barındıran bir class tasarlanabilir.
+
+public class Employee
+{
+	public string Name { get; init; }
+	public string Surname { get; init; }
+	public int Position { get; init; }
+}
+
+bu class'tan nesne ürettiğimizde object initializer'da ilgili property'lere değerlerini set edebliriz.
+
+Employee employee1 = new Employee
+{
+	Name = "Ali Joe",
+	Surname = "Jonathanoğlu",
+	Position = 1
+}
+
+- Bu nesnenin süreçte herhangi bir property değerini değiştirmek istediğimizde bunu gerçekleştirebilmek için yeni bir Employee nesnesi üretmemiz ve
+değişikliğin yapılacağı property dışında diğer property'leri bu nesneden eşleştirmemiz gerekecektir.
+
+Mesela Position'u 2 yapmak istersek;
+
+Employee employee2 = new Employee //isimli yeni bir nesne oluşturup değişmeyecek olan propery'lerin değerlerini önceki nesneden alıp
+{
+	Name = employee1.Name,
+	Surname = employee1.Surname,
+	Position = 2 //değişmek istediğimizi manuel olarak değişiyoruz.
+}
+
+- Bu yöntem adil sayıdan fazla property'e sahip olunduğu zaman can sıkıcı olabilir!
+
+- Halbuki bu senaryoda record kullansaydık, bu tarz kopyalama durumlarda "with Expression"dan faydalanabilmekte ve istenilen özellik hızlıca değiştirilebilmektedir.
+
+With Expression
+
+- İmmutable türlerde çalışırken nesne üzerinde değişiklik yapabilmek için ilgili nesneyi ya çoğaltmamız/klonlamamız(deep copy) ve üzerinde değişiklik yapmamız gerekmekte
+ya da manuel yeni bir nesne üretip mevcur nesnedeki değerleri, değişikliği yansıtılacak şekilde aktarmamız gerekmektedir.
+
+- Örnek olarak aşağıda bu tarz durumlara istinaden With function çözümü verilebilir.
+
+Employee employee1 = new Employee 
+{
+	Name = "Ali Joe",
+	Surname = "Jonathanoğlu",
+	Position = 1
+};
+
+Employee employee2 = employee.With(2);
+
+public class Employee
+{
+	public string Name { get; init; }
+	public string Surname { get; init; }
+	public int? Position { get; init; }
+	
+	public Employee With(int position)
+	{
+		return new Employee
+		{
+			Name = this.Name,
+			Surname = this.Surname,
+			Position = position
+		};
+	}
+}
+
+- Y da class değilde record kullanarak elimizdeki record'u direkt kopyalamızı sağlayan with expression'u ile sorunu çözebiliriz.
+
+Employee employee1 = new Employee
+{
+    Name = "Ali Joe",
+    Surname = "Jonathanoğlu",
+    Position = 1
+};
+
+Employee employee2 = employee1 with { Position = 2 };
+Employee employee3 = employee1 with { Name = "Hilmi", Position = 3 };
+Employee employee4 = employee2 with { Name = "Rıfkı", Surname = "Potter", Position = 4 };
+
+Console.WriteLine(employee1.Position); //1
+Console.WriteLine(employee2.Position); //2
+Console.WriteLine(employee3.Surname); //Jonathanoglu
+Console.WriteLine(employee4.Surname); //Potter
+
+public record Employee
+{
+    public string Name { get; init; }
+    public string Surname { get; init; }
+    public int? Position { get; init; }
+}
+
+
+
+

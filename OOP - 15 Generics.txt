@@ -1,0 +1,533 @@
+DERS 15: List - Listeler
+
+- List'de bir class'tır. Dizilerin kısıtlamalarından bizi kurtarır.
+- using System.Collections.Generic; dahil etmemiz lazım.
+
+List <type> isim = new List <type> () {...}
+
+Örnek:
+
+namespace MyNamespace
+{
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            int[] sayilar = new int[3]; //normal Array 
+
+            sayilar[0] = 2;
+            sayilar[1] = -1;
+            sayilar[2] = 6;
+            //sayilar[3] = 7; yazarsak hata alırız. Çünkü dizinin sınırını aştık.
+
+            //int[] sayilar2 = new int[3] {2, 6, 7, 9 }; hata.
+
+            List<int> numbers = new List<int>() { 2, 6, 7, 8, -15 }; //List'lerde sınırlama yok. Daima ekleme yapabiliriz.
+
+            numbers.Add(19);
+            numbers.Add(-7);
+            numbers.Add(30);
+
+            foreach (var item in numbers) //değerleri foreach ile yazdırabiliriz.
+            {
+                Console.WriteLine(item);
+            }
+        }
+    }    
+}
+
+-----------------
+
+Generic Yapıları
+
+- Generic'ler tasarlandığımız interface, class, metod yada parametrelerin (argümanların) belirli bir tip için değil bir şablon yapısına uyan her tip için çalışmasını sağlayan bir yapıdır.
+
+- Yazılım parçacıkları içerisinde tekrar kullanılabilir kod yazmamıza yardımcı olarak kod tekrarını önler.
+- Kaliteli ve daha yönetilebilir kod yazmamıza olanak sağlar.
+- Çalışma zamanında (run time) gereksiz Cast ve Boxing-Unboxing kullanmasını önlediğinden efektif performans sağlar.
+- Derleme zamanında (compile time) (type safe) tip güvenli değişken kullanılmasını zorlayarak çalışma zamanında oluşabilecek tip dönüşüm hatalarını önler.
+- Programcıya kod üzerinde daha güçlü esnek bir kontrol sağlar.
+
+Generic Koleksiyonlar (Generics Collections)
+
+- List en çok kullanılan koleksiyon tiplerinden biridir.
+- Generic koleksiyonlar System.Collections.Generics namespace’i sayesinde kullanılabilir. 
+- Bu namespace içirisinde çeşitli parametreleştirilmiş koleksiyon/konteynır sınıfları barındırmaktadır. 
+- Bunları kullanmak için sadece koleksiyonun tipini belirtip parametre olarak geçmek yeterlidir.
+
+Örnek:
+
+List<int> myList = new List<int>(); //<> içerisinde int tipini prametre olrak girip generic List türünde bir nesne oluşturuyoruz.
+myList.Add(3);
+myList.Add(4);
+// myList.Add(5.0); yorumu kaldırırsak hata verir. Çünkü sadece int tipinde değer kabul eder. Böylece derlee anında tip güvenliği sağlanmış olur.
+int total = 0;
+foreach(int val in myList)
+{
+        total = total + val;
+}
+Console.WriteLine("Toplam : {0}", total);
+
+Çıktı:
+Toplam : 7
+
+----------------
+
+Dictionary Sınıfının Temel Yapısı
+
+- Bir koleksiyon sınıfıdır.
+
+- Standart diziler sabit boyutludur; programlama aşamasında dizinin boyutu belirtilir ve programın çalışması sırasında değiştirilemez. 
+Dictionary ise değişken boyutludur. Eleman ekleme ve çıkarma durumuna göre boyutu dinamik olarak değişmektedir.
+
+-- Standart dizilere eklenen elemanlar, belleğe sıralı bir şekilde yerleştirilmektedir. Sıfırdan başlanarak her bir elemana birer indeks değeri verilip, 
+elemanlara o indeksler aracılığıyla erişmemiz sağlanmaktaydı. Koleksiyon sınıflarından biri olan ArrayList içinde aynı durum söz konusu.  
+ArrayList’e eklenen her bir elemana indeks numarasıyla erişebilmekteyiz.
+
+- Dictionary koleksiyonunda ise Anahtar(Key) ve Değer(Value) olmak üzere iki kavram karşımıza çıkmakta. Konuyu daha anlaşılır kılmak açısından; 
+standart dizilere eklediğimiz elemanları Değer, o elemanlara erişmek için kullandığımız indeksleri de Anahtar olarak düşünebilirsiniz.
+
+- Her bir Değerin farklı bir Anahtarı olmalıdır yani koleksiyon içerisinde yer alan Anahtarlar birbirinden farklı olmalıdır.
+
+- Dictionary sınıfından bir nesne oluştururken, anahtar ve değerin veri tiplerini belirtmemiz gerekmekte. 
+Aşağıdaki kod satırında, Key_Tipi yerine Anahtarın veri tipini, Value_Tipi yerine de Değerin verini tipini belirtmeliyiz.
+
+Dictionary<Key_Tipi, Value_Tipi> Referans_Adi = new Dictionary<Key_Tipi, Value_Tipi>();
+
+Örnek: Dictionary ile Öğrenci numarası girildiğinde ilgili öğrencinin adı-soyadı bilgilerini ekrana yazdır.
+
+Dictionary<int, string> Ogrenci = new Dictionary<int, string>();
+//öğrenci numarasını Anahtar, ad-soyad bilgisini de Değer olarak tutalım. Bu yüzden Anahtar int, Değer de string olsun.
+
+Ogrenci.Add(134, "Tolga Demirer"); //buraya gelir Anahtar 134'ün Değerini yani Tolga Demirer'i ekrana yazdırcaktır.
+Ogrenci.Add(158, "Ümit Özkan");
+Ogrenci.Add(115, "Kadir Aydemir");
+Ogrenci.Add(174, "Cemal Çiftçi");
+
+Console.Write("Öğrenci No Giriniz:");
+int No = int.Parse(Console.ReadLine()); //klavyeden girilen numarada bir öğrenci koleksiyon içerisinde mevcut ise ad-soyad bilgileri ekrana yazdırılacak.
+
+try
+{
+    Console.WriteLine(Ogrenci[No]); //134 girersek Ogrenci[134] 'e gidecek
+}
+catch
+{
+    Console.WriteLine("Öğrenci Bulunamadı."); //olmayan bir No girersekte burası tetiklenecektir.
+}
+
+Detaylı Dictionary bilgisi için: https://www.srdrylmz.com/c-dictionary-sinifi/
+
+---------------------
+
+Generic Sınıflar 
+
+- Şu ana kadar oluşturduğumuz sınıflarda, sınıf içerisindeki değişkenlerin, metotların ve parametrelerin veri tiplerini onları tanımlarken belirttik.
+
+public class Example
+{
+    public int example_1; //example_1 değişkeninin veri tipini ve
+    public void example_2(int parameter) { } //example_2 metodunun parametresinin ver tipini de int olarak belirttik.
+	
+}
+
+- Artık example_1 değişkenine int haricinde bir değer atamamız veya example_2 metoduna int'den farklı bir parametre atamak mümkün değildir.
+
+- Generic yapıyı kullanığımız takdirde sınıf içerisindeki değişkenlerin, parametrelerin ve metotların geri dönüş tiplerini o sınıftan bir nesne oluştururken belirtebilmekteyiz.
+
+public class Example<T>
+{
+    public T example_1;
+    public void example_2(T parameter) { }
+} 
+
+- Artık Example sınıfından nesne oluştururken T (farklı bir harf ya da isim de verilebilir) yerine hangi veri tipini yazarsak; sınıf içerisindeki değişken ve parametrenin
+tipi o şekilde olacaktır.
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Example<int> exp_1 = new Example<int>(); //exp_1 nesnesinde example_1 değişkeni ve example_2 metodunun parametresi int tipinde olacaktır.
+        exp_1.example_1 = 18;
+        exp_1.example_2(128);
+        Example<string> exp_2 = new Example<string>(); //exp_2 nesnesinde ise example_1 değişkeni ve example_2 metodunun parametresi string tipinde olacaktır.
+        exp_2.example_1 = "Serdar YILMAZ";
+        exp_2.example_2("C# - Generic Sınıflar");
+    }
+}
+
+- Yani generic'ler sayesinde bir sınıfın elemanlarının veri tiplerini ihtiyaç doğrultusunda yeni bir sınıf tanımlamaya gerek kalmadan değiştirebilmekteyiz.
+
+Example<int> exp_1 = new Example<int>(); //bu nesne oluşturulduğunda
+
+public class Example<int> //class bu şekli alacaktır.
+{
+    public int example_1;
+    public void example_2(int parameter) { }
+} 
+
+aynı şekilde,
+
+Example<string> exp_2 = new Example<string>(); //nesnesi oluşturulduğunda
+
+public class Example<string> //class bu şekli alacaktır.
+{
+    public string example_1;
+    public void example_2(string parameter) { }
+} 
+
+-----------------------
+
+Generic Metotlar
+
+- Bazen bir sınıf içerisindeki metotların sadece birkaçını Generic olarak kullanmak isteyebiliriz. 
+- Böylesi bir durumda sınıfı Generic yapmak yerine sadece ilgili metotları Generic yapmak çok daha mantıklı olacaktır.
+
+public class Example
+{
+    public int example_1(int parameter) //bu ve
+    {
+        return parameter;
+    }
+    public bool example_2(bool parameter) //bu metotların parametre ve geri dönüş tipleri bellidir. Bu yüzden farklı türden bir değer almaları ve geri döndürmeleri mümkün değildir.
+    {
+        return parameter;
+    }
+    public T example_3<T>(T parameter) //ancak example_3 metodu Generic olarak tanımlandığı için parametre ve geri dönüş tipi çağrılmdan önce belirtilmelidir. 
+    {
+        return parameter;
+    }
+    public string example_4<T>(T parameter) //example_4 metodunun ise geri dönüş tipi string olup, parametresinin veri tipi çağrılmadan önce belirtilmelidir.
+    {
+        return parameter.ToString();
+    }
+}
+
+class Program
+ {
+     static void Main(string[] args)
+     {
+         Example exp_1 = new Example();
+         Console.WriteLine(exp_1.example_1(18));
+         Console.WriteLine(exp_1.example_2(true));
+		 
+         // Metodun parametre ve geri dönüş tipi string olacaktır.
+         Console.WriteLine(exp_1.example_3<string>("Serdar YILMAZ"));
+		 
+         // Metodun parametre ve geri dönüş tipi double olacaktır.
+         Console.WriteLine(exp_1.example_3<double>(3.14));
+		 
+         // Metot int tipinde parametre alacaktır.
+         Console.WriteLine(exp_1.example_4<int>(15));
+		 
+         // Metot string tipinde parametre alacaktır.
+         Console.WriteLine(exp_1.example_4<string>("Serdar YILMAZ"));
+    }
+}
+
+--------------
+
+Generic Interfaces - Arayüzler
+
+- Tıpkı sınıflarda olduğu gibi arayüzleri de Generic olarak tanımlayabiliriz.
+
+Örnek:
+
+public interface IExample<T> //tek fark Generic sınıflarda veri tipini o sınıftan bir nesne oluştururken belirtmekteyiz.
+{
+    T example_1(T input);
+    void example_2(T input1, T input2);
+}
+
+//Generic arayüzlerde ise veri tipini, o arayüzü bir sınıfa implement ederken belirtmekteyiz.
+
+public class ExampleClass_1 : IExample<int> //veri tipini ExampleClass_1'e implement ederken belirttik.
+{
+    public int example_1(int input) { return input; } //her şey int oldu
+    public void example_2(int input1, int input2) { }
+}
+public class ExampleClass_2 : IExample<string> //aynı şekilde 
+{
+    public string example_1(string input) { return input; } //her yeri stringledik mübarek.
+    public void example_2(string input1, string input2) { }
+}
+
+-----------------
+
+Arayüzlerde Generic Metot Bildirimi 
+
+- Arayüz içerisindeki metotların tamamı Generic değilse; Arayüz yerine sadece ilgili metotları Generic yapmak daha mantıklı olacaktır, tıpkı Generic metotlarda anlattığımız gibi.
+
+public interface IExample
+{
+    void example_1(int input);
+    T example_2<T>(T input);
+}
+public class ExampleClass_1 : IExample
+{
+    public void example_1(int input) { }
+    public T example_2<T>(T input) { return input; }
+}
+
+- IExample arayüzü Generic olmadığı için herhangi veri tipi belirtmeden ExampleClass_1 sınıfına implement edebildik. 
+- example_2 metodu Generic olduğu için veri tipi metot çağrılırken girilecektir.
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        ExampleClass_1 example = new ExampleClass_1();
+        example.example_1(18);
+		
+        example.example_2<string>("Serdar YILMAZ"); //veri tipini metot çağırırken string olarak girdik.
+    }
+}
+
+---------------------
+
+Statik Generic Sınıflar
+
+- Statik sınıflar ile statik olmayan sınıfların Generic yapılması noktasında arada herhangi bir fark bulunmuyor. 
+- Statik sınıfların metot ve değişkenlerine nesne oluşturmadan erişebildiğimiz için, veri tipini sınıf adını yazdıktan hemen sonra belirtiyoruz.
+
+public static class Example<T>
+{
+    public static T example_1(T input) { return input; }
+}
+class Program
+{
+    static void Main(string[] args)
+    {
+        Example<string>.example_1("Serdar YILMAZ");
+    }
+}
+
+----------------------
+
+Generic’lerde Birden Fazla Veri Tipinin Kullanılması
+
+- Generic ifadelere birden fazla veri tipi gönderebiliriz.
+
+public class Example<T, Y, C>
+{
+    public T example_1;
+    public void example_2(Y parameter1, C parameter2) { }
+}
+class Program
+{
+    static void Main(string[] args)
+    {
+        Example<int, string, bool> example = new Example<int, string, bool>();
+        example.example_1 = 18;
+        example.example_2("Serdar YILMAZ", true);
+    }
+}
+
+--------------------
+
+Generic Kısıtlar
+
+Değer ve Referans Tip Kısıtı
+
+public class ExampleClass<T>
+{
+    public T example_1 { get; set; }
+    public T example_2(T parameter)
+    {
+        return parameter;
+    }
+}
+
+- ExampleClass Generic sınıfına herhangi bir kısıt uygulanmadığı için T yerine int, double, float gibi değer tipleri gönderebileceği gibi; 
+string, object, array gibi referans tipleri de gönderilebilir.
+
+- Değer Tipleri: “int”, “long”, “float”, “double”, “decimal”, “char”, “bool”, “byte”, “short”, “struct”, “enum”
+Referans Tipleri: “string”, “object”, “class”, “interface”, “array”, “delegate”, “pointer”
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        ExampleClass<int> obj1 = new ExampleClass<int>();
+        obj1.example_1 = 18;
+        obj1.example_2(128);
+        ExampleClass<string> obj2 = new ExampleClass<string>();
+        obj2.example_1 = "Serdar YILMAZ";
+        obj2.example_2("C# Doküman");
+    }
+}
+
+- Oluşturduğumuz ExampleClass Generic sınıfına sadece referans tip veya sadece değer tip gönderilmesini isteyebiliriz. 
+Böylesi bir durumda Generic sınıfımıza bir kısıt koymamız gerekmekte.
+
+- Sadece referans tip gönderilmesi için;  
+
+public class ExampleClass<T> where T:class
+{
+    public T example_1 { get; set; }
+    public T example_2(T parameter)
+    {
+        return parameter;
+    }
+}
+
+- ExampleClass Generic sınıfına, “where T:class” kısıtı sayesinde sadece referans tipleri gönderilebilir. 
+Değer tipli bir tür gönderildiği takdirde hata oluşacak ve proje derlenmeyecektir.
+
+ExampleClass<string> obj1 = new ExampleClass<string>(); // Geçerli tip
+ExampleClass<object> obj2 = new ExampleClass<object>(); // Geçerli tip
+
+ExampleClass<int> obj3 = new ExampleClass<int>();       // HATA! Geçersiz tip
+ExampleClass<bool> obj4 = new ExampleClass<bool>();     // HATA! Geçersiz tip
+
+- Sadece değer tip gönderilmesi için;
+ 
+public class ExampleClass<T> where T : struct
+{
+    public T example_1 { get; set; }
+    public T example_2(T parameter)
+    {
+        return parameter;
+    }
+}
+
+- ExampleClass Generic sınıfına, “where T : struct” kısıtı sayesinde sadece değer tipleri gönderilebilir. 
+Referans tipli bir tür gönderildiği takdirde hata oluşacak ve proje derlenmeyecektir.
+
+ExampleClass<int> obj1 = new ExampleClass<int>();        // Geçerli tip
+ExampleClass<bool> obj2 = new ExampleClass<bool>();      // Geçerli tip
+
+ExampleClass<string> obj3 = new ExampleClass<string>();  // HATA! Geçersiz tip
+ExampleClass<object> obj4 = new ExampleClass<object>();  // HATA! Geçersiz tip
+
+-----------------------
+
+Base Class Kısıtı
+
+- T parametresi herhangi bir class veya o class'tan türeyen sınıfları refere edebilsin koşulu koyabiliriz.
+
+class MyClass<T> where T:A //T tipi A veya A'dan türeyen sınıfları temsil edebilir.
+{
+	T t;
+	
+	public void X()
+	{ }
+}
+
+class A 
+{ }
+
+class B:A 
+{ }
+
+class C:B 
+{ }
+
+class D 
+{ }
+
+Main...
+{
+	MyClass<A> m1 = new MyClass<A>(); //A veya A'dan kalıtım alan sınıfları refere edebilir.
+	MyClass<B> m2 = new MyClass<B>();
+	MyClass<C> m3 = new MyClass<C>();
+	
+	MyClass<D> m3 = new MyClass<D>(); //HATA. D, A'dan kalıtım almıyor.
+}
+
+
+-----------------
+
+new() Kısıtı
+
+-Generic sınıfa gönderilen veri tipini, sınıf içerisinde new’liyorsak, yani o tipten yeni bir nesne oluşturuyorsak; Generic sınıfa “new()“ kısıtını uygulamamız gerekmektedir.
+Eğer Visual Studio ile geliştirme yapıyorsanız zaten IDE sizi new() kısıtını uygulamaya zorlayacaktır.
+
+- T obj = new T(); 'de verilen tip bir nesne üretilemeyen bir sınıf olabilir(static), constructor'u private olan ya da parametre alan bir sınıf olabilir, interface olabilir, veyahut bunun
+gibi nesne üretmemizi engelleyen bir tip olabilir. where T : new() ile bana bunun nesne üretilebilir bir sınıf olduğunun garantisini ver, sadee bu olduğunda nesne üret demiş oluyoruz. 
+T'den bir nesne üretilebilir sınıf verilecektir.
+
+public class ExampleClass<T> where T : new()
+{
+    public T createObject()
+    {
+        T obj = new T();
+        return obj;
+    }
+}
+
+- ExampleClass Generic sınıfında gönderilen veri tipi createObject metodunda new’lenerek yeni bir nesne oluşturulmak istendiğinden new() kısıtı uygulanmıştır. 
+Artık ExampleClass Generic sınıfına sadece nesne oluşturulabilen yani new() lenebilen türler gönderilebilir.
+
+-------------------
+
+Arayüz kısıtı
+
+- Generic sınıfa sadece belirttiğimiz arayüzleri implement alan türlerin gönderilmesini istiyorsak arayüz kısıtını uygularız.
+
+public interface IExample1 { }
+public interface IExample2 { }
+
+public class ExampleClass1 : IExample1
+{
+    public string example_1 { get; set; }
+}
+public class ExampleClass2 : IExample1
+{
+    public string example_1 { get; set; }
+}
+public class ExampleClass3 : IExample2
+{
+    public string example_1 { get; set; }
+}
+
+- IExample1 ve IExample2 isminde iki arayüz oluşturduk. IExample1 arayüzünü ExampleClass1 ve ExampleClass2‘ye implement ettik. 
+IExample2 arayüzünü de ExampleClass3 sınıfına implement ettik.
+
+public class GenericClass<T> where T : IExample1
+{
+    public T example_1 { get; set; }
+    public T example_2(T parameter) { return parameter; }
+}
+
+- Generic sınıfımıza “where T : IExample1” kısıtını eklediğimiz takdirde; Generic sınıfımıza veri türü olarak sadece IExample1 arayüzünü implement alan ExampleClass1 ve ExampleClass2 
+gönderilebilecektir. ExampleClass3 sınıfı IExample1 arayüzünü implement almadığı için GenericClass’a veri tipi olarak gönderilmek istendiğinde hata alınacaktır. 
+Arayüz kısıtı sayesinde Generic sınıflara sadece belli arayüzleri implement alan sınıfların gönderilmesini sağlayabiliriz.
+
+------------------------
+
+Birden Fazla Kısıt Ekleme
+
+- Yukarıda anlatmış olduğumuz kısıtları birlikte de kullanabiliriz.
+
+public interface IExample1 { }
+public class ExampleClass<T> where T : class, IExample1 , new()
+{
+    public T createObject()
+    {
+        T obj = new T();
+        return obj;
+    }
+}
+
+- ExampleClass Generic sınıfına sadece referans tipli olan, IExample1 arayüzünü implement alan ve new’lenebilen veri türleri gönderilebilir.
+
+- new() kısıtı her zaman en son da yer almalıdır.
+
+------------------------------
+
+Generic Metotlara Kısıtların Eklenmesi
+
+- Generic kısıtları tıpkı sınıflarda kullandığımız gibi generic metotlarda da kullanabiliriz.
+
+public class ExampleClass
+{
+    public T createObject<T>() where T : class, IExample1, new()
+    {
+        T obj = new T();
+        return obj;
+    }
+}
+
+- createObject Generic metoduna sadece referans tipli olan, IExample1 arayüzünü implement alan ve new’lenebilen veri türleri gönderilebilir.

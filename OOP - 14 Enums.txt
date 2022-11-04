@@ -1,0 +1,402 @@
+DERS 14: Enums
+
+Örnek:
+
+namespace MyNamespace
+{
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            Person person = new Person();
+            person.school = "Primary School";
+
+            if(person.school.Equals("Primary School"))
+            {
+                Console.WriteLine("XYZ");
+            }
+            else if(person.school.Equals("High School"))
+            {
+                Console.WriteLine("ABC");
+            }
+            else if (person.school.Equals("University"))
+            {
+                Console.WriteLine("123");
+            }
+        }
+    }
+
+    class Person
+    {
+        public string school;
+    }
+}
+
+Çıktı: 
+XYZ
+
+Kodu değiştirip, class'a default constructor eklersek;
+
+namespace MyNamespace
+{
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            Person person = new Person();
+
+            if(person.school.Equals("Primary School"))
+            {
+                Console.WriteLine("XYZ");
+            }
+            else if(person.school.Equals("High School"))
+            {
+                Console.WriteLine("ABC");
+            }
+            else if (person.school.Equals("University"))
+            {
+                Console.WriteLine("123");
+            }
+        }
+    }
+
+    class Person
+    {
+        public Person() //Default Constructor oluşturalım.
+        {
+            school = "High School"; //nesne oluşturulduğunda ilk bunu çalıştıracak.
+        }
+        public string school;
+    }
+}
+
+Çıktı:
+ABC
+
+Kodun okunabilirliğini arttırmak adına rakamlar ile çalışırsak;
+
+namespace MyNamespace
+{
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            Person person = new Person();
+            person.school = 2;
+
+            if(person.school.Equals(0))
+            {
+                Console.WriteLine("XYZ");
+            }
+            else if(person.school.Equals(1))
+            {
+                Console.WriteLine("ABC");
+            }
+            else if (person.school.Equals(2))
+            {
+                Console.WriteLine("123");
+            }
+        }
+    }
+
+    class Person
+    {
+        public Person() 
+        {
+            school = 0; 
+        }
+        public int school;
+    }
+}
+
+Çıktı:
+123
+
+fakat burada şöyle bir sorun çıktı, artık neyin ne olduğunu bilmiyoruz.
+
+Çözüm olarak string ve sayıları ilişkilendirebilen bir yapıya ihtiyacımız var. Burada Enum'lar devreye giriyor.
+
+Sayıları anlamlı şekilde isimlendirerek bizim daha efektif kullanmamızı sağlar.
+
+namespace MyNamespace
+{
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            Person person = new Person();
+            person.school = Schools.PrimarySchool;
+
+            if(person.school.Equals(Schools.PrimarySchool))
+            {
+                Console.WriteLine("XYZ");
+            }
+            else if(person.school.Equals(Schools.HighSchool))
+            {
+                Console.WriteLine("ABC");
+            }
+            else if (person.school.Equals(Schools.University))
+            {
+                Console.WriteLine("123");
+            }
+        }
+    }
+
+    enum Schools
+    {
+        //PrimarySchool,HighSchool,University
+        //default başlangıç deperleri 0-1-2
+
+        //PrimarySchool=1,HighSchool,University
+        //dediğimiz anda 1-2-3 olacaktır.
+
+        //hepsine farklı değer de verebiliriz.
+        //PrimarySchool=1,HighSchool=15,University=25
+
+        PrimarySchool = 1, HighSchool = 2, University = 3
+    }
+    class Person
+    {
+        public Person() 
+        {
+            school = Schools.HighSchool; //Schools. dediğimiz anda üç elemanda gelir. Burada varsayılan değerimizi default constructor ile HighSchool seçmiş olduk.
+        }
+        public Schools school; //enum Schools türünden değişken oluşturduk.
+    }
+}
+
+Çıktı:
+XYZ
+
+Hem daha okunabilir hem daha şık oldu.
+
+Peki PrimarySchool = 1, HighSchool = 2, University = 3'deki int değerlerini nasıl elde ederiz?
+
+namespace MyNamespace
+{
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            Console.WriteLine((int)Schools.PrimarySchool); //casting yaparak enum'un değerini alabiliriz. Ekrana 1 yazdırır.
+            Console.WriteLine((int)Schools.PrimarySchool == 1); //true yazacaktır. if karşılaştırmalarında kullanabiliriz.
+        }
+    }
+
+    enum Schools
+    {
+        PrimarySchool = 1, HighSchool = 2, University = 3
+    }
+    
+}
+
+Çeşitlendirirsek;
+
+namespace MyNamespace
+{
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            Console.WriteLine((int)Schools.HighSchool); // ekrana 2 yazdırır.
+        }
+    }
+
+    enum Schools
+    {
+        PrimarySchool = 1, HighSchool, University
+    }
+    
+}
+
+---
+
+namespace MyNamespace
+{
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            Console.WriteLine((int)Schools.HighSchool); // ekrana 42 yazdırır.
+        }
+    }
+
+    enum Schools
+    {
+        PrimarySchool = 4, HighSchool = 42, University = 555
+    }
+    
+}
+
+-------------
+
+Enum. dediğimiz an birçok metoda erişebiliriz.
+
+Enum metotları type ile kullanılır. Yani direkt enum adını yazamıyoruz. Bunu da typeof ile veriyoruz. Type of tipini döndüren bir operatördür.
+
+Console.WriteLine(typeof(int)); //ekrana System.Int32 yazdırır.
+
+Console.WriteLine(typeof(Program)); //class adımız ile kullanırsak MyNamespace.Program yazdırır.
+
+namespace MyNamespace
+{
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            Console.WriteLine(Enum.Parse(typeof(Schools),"PrimarySchool"));
+            //Console.WriteLine(Enum.Parse(typeof(Schools),"5")); aynı çıktıyı alırız. Ekrana PrimarySchool yazar.
+
+            //Console.WriteLine(Enum.Parse(typeof(Schools), "PrimaryxSchool")); hata verir. 
+            
+            //Console.WriteLine(Enum.Parse(typeof(Schools), "18")); //olmayan bir index yazarsak (string formatta) ekrana 18 yazar.             
+        }
+    }
+
+    enum Schools
+    {
+        PrimarySchool = 4, HighSchool = 42, University = 555
+    }    
+}
+
+Bir diğer metodumuz GetName()
+
+namespace MyNamespace
+{
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            Console.WriteLine(Enum.GetName(typeof(Schools),4)); //Ekrana PrimarySchool yazdırır.
+        }
+    }
+
+    enum Schools
+    {
+        PrimarySchool = 4, HighSchool = 42, University = 555
+    }    
+}
+
+Tüm değerleri almak için;
+
+namespace MyNamespace
+{
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            string[] schools = Enum.GetNames(typeof(Schools)); //bir string dizisi oluşturup GetNames ile isimleri diziye atayalım.
+
+            foreach(var item in schools)
+            {
+                Console.WriteLine(item);    
+            }
+        }
+    }
+
+    enum Schools
+    {
+        PrimarySchool = 4, HighSchool = 42, University = 555
+    }    
+}
+
+Çıktı:
+PrimarySchool
+HighSchool
+University
+
+Ya da değerleri almak için GetValues'i kullanabiliriz. GetValues'ün dönüş tipi Array'dir.
+
+namespace MyNamespace
+{
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+
+            foreach(var item in Enum.GetNames(typeof(Schools))) //şeklinde yazabiliriz.
+            {
+                Console.WriteLine(item);    
+            }
+        }
+    }
+    enum Schools
+    {
+        PrimarySchool = 4, HighSchool = 42, University = 555
+    }    
+}
+
+Çıktı:
+PrimarySchool
+HighSchool
+University
+
+Örnek:
+
+class Program
+{
+  enum Level
+  {
+    Low,
+    Medium,
+    High
+  }
+  static void Main(string[] args)
+  {
+    Level myVar = Level.Medium;
+    Console.WriteLine(myVar);
+  }
+}
+
+Çıktı:
+Medium
+
+Örnek:
+
+enum Months
+{
+  January,    // 0
+  February,   // 1
+  March,      // 2
+  April,      // 3
+  May,        // 4
+  June,       // 5
+  July        // 6
+}
+
+static void Main(string[] args)
+{
+  int myNum = (int) Months.April;
+  Console.WriteLine(myNum);
+}
+
+Çıktı:
+3
+
+Örnek:
+enum Level 
+{
+  Low,
+  Medium,
+  High
+}
+
+static void Main(string[] args) 
+{
+  Level myVar = Level.Medium;
+  switch(myVar) 
+  {
+    case Level.Low:
+      Console.WriteLine("Low level");
+      break;
+    case Level.Medium:
+       Console.WriteLine("Medium level");
+      break;
+    case Level.High:
+      Console.WriteLine("High level");
+      break;
+  }
+}
+
+Çıktı:
+Medium level
